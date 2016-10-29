@@ -1,0 +1,83 @@
+C51 COMPILER V7.06   MAIN                                                                  12/02/2009 09:36:29 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.obj
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE ILI9325\main.c BROWSE DEBUG OBJECTEXTEND PRINT(.\main.lst) OBJECT(main.obj)
+
+stmt level    source
+
+   1          /***********************************************************/
+   2          //周立功SmartSOPC实验箱QuickARM实验板驱动ILI9325
+   3          //
+   4          //
+   5          //Create by :Jetchen
+   6          //Data:18/04/2009
+   7          //
+   8          /***********************************************************/
+   9          
+  10          
+  11          
+  12          //#include "config.h"
+  13          //#include "GPIO.h"// GPIO底层驱动                                      
+  14          #include "ILI9325.h" 
+*** ERROR C141 IN LINE 79 OF ILI9325\ILI9325.H: syntax error near 'time', expected ')'
+*** ERROR C141 IN LINE 80 OF ILI9325\ILI9325.H: syntax error near 'Dtime', expected ')'
+*** ERROR C141 IN LINE 81 OF ILI9325\ILI9325.H: syntax error near 'xAddr', expected ')'
+*** ERROR C141 IN LINE 82 OF ILI9325\ILI9325.H: syntax error near 'bColor', expected ')'
+*** ERROR C141 IN LINE 83 OF ILI9325\ILI9325.H: syntax error near 'chr', expected ')'
+*** ERROR C141 IN LINE 84 OF ILI9325\ILI9325.H: syntax error near '*', expected ')'
+*** ERROR C141 IN LINE 85 OF ILI9325\ILI9325.H: syntax error near 'chr', expected ')'
+*** ERROR C141 IN LINE 86 OF ILI9325\ILI9325.H: syntax error near '*', expected ')'
+*** ERROR C141 IN LINE 87 OF ILI9325\ILI9325.H: syntax error near '*', expected ')'
+*** ERROR C141 IN LINE 88 OF ILI9325\ILI9325.H: syntax error near '*', expected ')'
+*** ERROR C141 IN LINE 89 OF ILI9325\ILI9325.H: syntax error near 'num', expected ')'
+*** ERROR C141 IN LINE 90 OF ILI9325\ILI9325.H: syntax error near 'num', expected ')'
+*** ERROR C141 IN LINE 91 OF ILI9325\ILI9325.H: syntax error near 'num', expected ')'
+*** ERROR C141 IN LINE 92 OF ILI9325\ILI9325.H: syntax error near 'num', expected ')'
+*** ERROR C141 IN LINE 93 OF ILI9325\ILI9325.H: syntax error near 'color', expected ')'
+*** ERROR C141 IN LINE 94 OF ILI9325\ILI9325.H: syntax error near 'fill', expected ')'
+*** ERROR C141 IN LINE 95 OF ILI9325\ILI9325.H: syntax error near 'color', expected ')'
+*** ERROR C141 IN LINE 96 OF ILI9325\ILI9325.H: syntax error near '*', expected ')'
+*** ERROR C141 IN LINE 97 OF ILI9325\ILI9325.H: syntax error near '*', expected ')'
+  15          //#include "uart0.h"
+  16          #include "ASC_II.h"//ASC_II点阵
+  17          #include "HZ.h"//汉字点阵
+  18           
+  19           
+  20          /**********************************************************/
+  21          //函数名称：main
+  22          /**********************************************************/
+  23          int main (void)
+  24          {   
+  25   1         
+  26   1          P1_GPIOInit(ILI9325_RESET,1);//set P1 as GPIO
+  27   1              IO1DIR |=  ILI9325_RESET;//set GPIO as output
+  28   1          UART0Init(9600);//init the UART0
+  29   1          UartSendString("UART0 set OK");
+  30   1          LCD_Init();
+  31   1          UartSendString("LCD_Init OK"); 
+  32   1          LCD_ClearScreen(WHITE);
+  33   1          LCD_DispStr((uint8*)"www.stuelab.cn",55,25,SMALL,RED,WHITE);
+  34   1          LCD_DispStr((uint8*)"www.stuelab.cn",45,40,MEDIUM,BLUE,GREY);
+  35   1          LCD_DispStr((uint8*)"www.stuelab.cn",45,55,LARGE,MAGENTA,GREY);    
+  36   1          
+C51 COMPILER V7.06   MAIN                                                                  12/02/2009 09:36:29 PAGE 2   
+
+  37   1          LCD_DispChineseStr((uint8*)HZFont12x12 ,30,85,HZSMALL,5,11,RED,WHITE);
+  38   1          LCD_DispChineseStr((uint8*)HZFont16x16 ,30,105,HZLARGE,0,11,BLACK,WHITE);    
+  39   1       
+  40   1          LCD_DispMaxStr((uint8*)"www.stuelab.cn",10,170,RED,YELLOW);
+  41   1          
+  42   1          LCD_DispStr((uint8*)"        ----made by Jetchen",10,220,LARGE,BLACK,WHITE);
+  43   1          LCD_DispStr((uint8*)"                 04/18/2009",10,240,LARGE,BLACK,WHITE);
+  44   1              while(1);
+  45   1               
+  46   1       
+  47   1                                                                                                      
+  48   1      }
+  49          
+  50           
+  51          
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  19 ERROR(S)

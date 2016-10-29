@@ -1,0 +1,15 @@
+程序中SD卡部分定义如下：
+//定义SD卡需要的4根信号线
+sbit SD_DO  = P1^0;
+sbit SD_CLK = P1^1;
+sbit SD_DI  = P1^2;
+sbit SD_CS  = P1^3;
+
+2.4或者1.77寸液晶板上J3插针上符号引脚如下，用杜邦线把对应的脚连接起来
+
+DOUT--P1.0
+SCK --P1.1
+DIN --P1.2
+CS  --P1.3
+
+

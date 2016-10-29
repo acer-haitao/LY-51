@@ -1,0 +1,38 @@
+C51 COMPILER V7.06   MAIN                                                                  12/02/2010 09:16:07 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Obj\main.obj
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE Source\main.c BROWSE DEBUG OBJECTEXTEND PRINT(.\List\main.lst) OBJECT(.\Obj
+                    -\main.obj)
+
+stmt level    source
+
+   1          
+   2          #include"9325tp.h"
+   3          #include"reg52.h"
+   4          #include"touch.h"
+   5          
+   6          
+   7          
+   8          main()
+   9          {
+  10   1       ILI9325_Initial();
+  11   1      
+  12   1       Touch ();
+  13   1       while(1);
+  14   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =      8    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

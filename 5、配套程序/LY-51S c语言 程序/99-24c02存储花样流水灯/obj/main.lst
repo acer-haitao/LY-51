@@ -1,0 +1,61 @@
+C51 COMPILER V7.06   MAIN                                                                  06/02/2010 10:03:45 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\obj\main.obj
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND PRINT(.\obj\main.lst) OBJECT(.\obj\main.ob
+                    -j)
+
+stmt level    source
+
+   1          /*-----------------------------------------------
+   2            名称：IIC协议 24c02存储花样灯程序
+   3            论坛：www.doflye.net
+   4            编写：shifang
+   5            修改：无
+   6            内容：将表格内容写入24c02，然后批量删除这些数据，并从24c02中读取数据并显示
+   7          ------------------------------------------------*/  
+   8          #include <reg52.h>                
+   9          #include "i2c.h"
+  10          /******************************************************************/
+  11          /*                   花样表格                                     */
+  12          /******************************************************************/
+  13          unsigned char      dat[]={0x7f,0xbf,0xdf,0xef,
+  14                                                            0xf7,0xfb,0xfd,0xfe,
+  15                                                            0xff,0xff,0x00,0x00,
+  16                                                            0x55,0x55,0xaa,0xaa
+  17                                                            };//ram允许情况可以无限添加
+  18          
+  19          main()
+  20          {
+  21   1       //bit flag;
+  22   1       unsigned char i;
+  23   1       ISendStr(0xae,80,dat,16);                   //写入24c02
+  24   1       DelayMs(1);                                //写入后必须延时等待24c02内部烧录数据处理完毕方可继续其他操作
+  25   1       for(i=0;i<16;i++)                          //清除数据
+  26   1           dat[i]=0;
+  27   1       IRcvStr(0xae,80,dat,16);                   //从24c02读出数据 
+  28   1       while(1)
+  29   1           {
+  30   2      
+  31   2                 for(i=0;i<16;i++)                   //查表
+  32   2                   {
+  33   3                       DelayMs(200);
+  34   3               P1=dat[i];
+  35   3                       }
+  36   2               }
+  37   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     81    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     16       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,151 @@
+C51 COMPILER V7.06   LCD1602                                                               06/19/2009 10:01:56 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE LCD1602
+OBJECT MODULE PLACED IN LCD1602.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE LCD1602.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          
+   2          /*1-VSS 2-VDD 3-V0 4-RS 5-R/W 6-E
+   3           *7-14 DB0-DB7 15-BLA 16-BLK
+   4           */
+   5          
+   6          /*copyright 2007,ShangHai  HaoTun Electronic Technology co.,Ltd
+   7           *
+   8           *This sample is used for lcm1602 .
+   9           *
+  10           *write by Shifang 2007-8-11
+  11           *
+  12           *V1.1
+  13           */
+  14          #include<reg52.h>
+  15          #include<stdio.h>
+  16          #include<intrins.h>
+  17          
+  18          
+  19          unsigned int hour,minute,second,count;
+  20          
+  21          sbit RS = P2^4;//Pin4
+  22          sbit RW = P2^5; //Pin5
+  23          sbit E  = P2^6;//Pin6
+  24          
+  25          #define Data  P0    //数据端口
+  26          
+  27          extern unsigned int l_tmpdate[7];
+  28          
+  29          char data TimeNum[]="                ";
+  30          char data Test1[]="                  ";
+  31          /******************************************************************/
+  32          /*                    函数声明                                    */
+  33          /******************************************************************//*************************************
+             -**************************/
+  34          void DelayUs(unsigned char us)//delay us
+  35          {
+  36   1       unsigned char uscnt;
+  37   1       uscnt=us>>1;/* Crystal frequency in 12MHz*/
+  38   1       while(--uscnt);
+  39   1      }
+  40          /******************************************************************/
+  41          void DelayMs(unsigned char ms)//delay Ms
+  42          {
+  43   1       while(--ms)
+  44   1         {
+  45   2           DelayUs(250);
+  46   2           DelayUs(250);
+  47   2               DelayUs(250);
+  48   2               DelayUs(250);
+  49   2         }
+  50   1      }
+  51          void WriteCommand(unsigned char c)
+  52          {
+  53   1       DelayMs(5);//short delay before operation
+  54   1       E=0;
+C51 COMPILER V7.06   LCD1602                                                               06/19/2009 10:01:56 PAGE 2   
+
+  55   1       RS=0;
+  56   1       RW=0;
+  57   1       _nop_();
+  58   1       E=1;
+  59   1       Data=c;
+  60   1       E=0;
+  61   1      }
+  62          /****************************************************************/
+  63          void WriteData(unsigned char c)
+  64          {
+  65   1       DelayMs(5);   //short delay before operation
+  66   1       E=0;
+  67   1       RS=1;
+  68   1       RW=0;
+  69   1       _nop_();
+  70   1       E=1;
+  71   1       Data=c;
+  72   1       E=0;
+  73   1       RS=0;
+  74   1      }
+  75          /*********************************************************************/
+  76          void ShowChar(unsigned char pos,unsigned char c)
+  77          {
+  78   1       unsigned char p;
+  79   1       if (pos>=0x10)
+  80   1          p=pos+0xb0; //是第二行则命令代码高4位为0xc
+  81   1       else 
+  82   1          p=pos+0x80; //是第二行则命令代码高4位为0x8
+  83   1       WriteCommand (p);//write command
+  84   1       WriteData (c);   //write data
+  85   1      }
+  86          /*************************************************************************/
+  87          void ShowString (unsigned char line,char *ptr)
+  88          {
+  89   1       unsigned char l,i;
+  90   1       l=line<<4;
+  91   1       for (i=0;i<16;i++)
+  92   1        ShowChar (l++,*(ptr+i));//循环显示16个字符
+  93   1      }
+  94          /*********************************************************************/
+  95          void InitLcd()
+  96          {
+  97   1       DelayMs(15);
+  98   1       WriteCommand(0x38); //display mode
+  99   1       WriteCommand(0x38); //display mode
+ 100   1       WriteCommand(0x38); //display mode
+ 101   1       WriteCommand(0x06); //显示光标移动位置
+ 102   1       WriteCommand(0x0c); //显示开及光标设置
+ 103   1       WriteCommand(0x01); //显示清屏
+ 104   1      
+ 105   1      }
+ 106          
+ 107          
+ 108          /////////////////////////////////////////////////////////////////
+ 109          void disp(void)
+ 110          
+ 111          {
+ 112   1      
+ 113   1      
+ 114   1      sprintf(Test1," 20%02d-%d-%2d  ^%1d^   ",l_tmpdate[6],l_tmpdate[4],l_tmpdate[3],l_tmpdate[5]);//the first 
+             -line
+ 115   1      ShowString(0,Test1);
+C51 COMPILER V7.06   LCD1602                                                               06/19/2009 10:01:56 PAGE 3   
+
+ 116   1      
+ 117   1      sprintf(TimeNum,"    %02d:%02d:%02d     ",l_tmpdate[2],l_tmpdate[1],l_tmpdate[0]);//the first line
+ 118   1      ShowString(1,TimeNum);
+ 119   1      
+ 120   1      
+ 121   1      
+ 122   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    285    ----
+   CONSTANT SIZE    =     49    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     44       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

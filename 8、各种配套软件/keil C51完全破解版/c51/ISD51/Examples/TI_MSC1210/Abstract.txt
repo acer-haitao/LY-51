@@ -1,0 +1,17 @@
+The ISD51_Demo project for the MSC1210 shows how to use the ISD51
+In-System-Debugger with flash breakpoints or hardware breakpoints.
+By default, it is configured for flash breakpoints.
+
+This example just blinks with the two LEDs on the MSC1210EVM evaluation board.
+- The yellow LED is driven by the 'seconds' interrupt.
+- The red LED is driven by a delay loop in the main function.           
+
+This example also shows how to use the shared interrupt at address 0x33 when ISD51
+is configured for hardware breakpoints.
+
+
+The ISD51_Demo program contains two different targets:
+  ISD51 Demo (11.059MHz):  For MSC1210EVM boards with 11.059 MHz crystal
+
+  ISD51 Demo (1.840MHz):   For MSC1210-DAQ_EVM boards with 1.8432 MHz crystal (mini versions)
+

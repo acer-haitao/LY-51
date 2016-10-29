@@ -1,0 +1,1 @@
+装好驱动后，将替换文件目录下libusb0.dll和libusb0.sys复制到AVR_fighter目录下覆盖原文件才可正常工作。

@@ -1,0 +1,165 @@
+C51 COMPILER V7.06   MAIN                                                                  07/12/2010 23:37:52 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          /*-----------------------------------------------
+   2            Ãû³Æ£ºLCD1602ÏÔÊ¾ÊµÊ±Ê±ÖÓ
+   3            ¹«Ë¾£ºÉÏº£ºÆëàµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
+   4            ÍøÕ¾£ºwww.doflye.cn
+   5            ±àÐ´£ºÊ¦·Ã
+   6            ÈÕÆÚ£º2009.5
+   7            ÐÞ¸Ä£ºÎÞ
+   8            ÄÚÈÝ£ºÍ¨¹ý¶ÁÈ¡ds1302ÐÅÏ¢Ö±½ÓÏÔÊ¾µ½Òº¾§ÆÁÉÏ¡£ÓÐ±¸ÓÃµç³Ø£¬¶ÏµçºóÊ±¼äÈÔ¿ÉÒÔÕý³£ÔËÐÐ¡£Í¨¹ý´®¿Úµ÷ÊÔÈí¼þ¸üÐÂÊ±
+             -¼ä¡£¸üÐÂ·½Ê½ÈçÏÂ
+   9                  ÔÚ·¢ËÍÀ¸ÌîÐ´Ê±¼äÐÅÏ¢£¬¸ñÊ½ÈçÏÂ 2009071210102005 ±íÊ¾2009Äê7ÔÂ12ÈÕ 10µã10·Ö20Ãë ÐÇÆÚÎå£¬È»ºóÍ¨¹ý´®¿
+             -Ú·¢ËÍ£¬Ó²¼þÁ¬½Ó·½Ê½ºÍ
+  10                          ´®¿ÚÍ¨ÐÅÏàÍ¬¡£×¢ÒâÖÐ¼ä²»ÄÜÓÐ¿Õ¸ñ
+  11            -----------------------------------------------*/
+  12          #include<reg52.h>
+  13          #include"ds1302.h"
+  14          #include"9325TP.h"
+  15          
+  16          
+  17          
+  18          bit SetFlag;      //¸üÐÂÊ±¼ä±êÖ¾Î»
+  19          unsigned char time_buf2[16];
+  20          ///////////////////////////////////////////////////////////////////////////////
+  21          void disp(void);
+  22          ///////////////////////////////////////////////////////////////////////////////
+  23          void delay(unsigned int U)
+  24          {
+  25   1       while(--U);
+  26   1      }
+  27          //////////////////////////////////////////////////////////////////////////////
+  28          void UART_Init(void)
+  29          {
+  30   1          SCON  = 0x50;                       /* SCON: Ä£Ê½ 1, 8-bit UART, Ê¹ÄÜ½ÓÊÕ         */
+  31   1          TMOD |= 0x20;               /* TMOD: timer 1, mode 2, 8-bit reload        */
+  32   1          TH1   = 0xFD;               /* TH1:  reload value for 9600 baud @ 11.0592MHz   */
+  33   1          TR1   = 1;                  /* TR1:  timer 1 run                          */
+  34   1          EA    = 1;                  /*´ò¿ª×ÜÖÐ¶Ï*/
+  35   1          ES    = 1;                  /*´ò¿ª´®¿ÚÖÐ¶Ï*/
+  36   1      
+  37   1      }
+  38          /////////////////////////////////////////////////////////////////////////////////
+  39          main()
+  40          {
+  41   1        unsigned char i;
+  42   1      
+  43   1             UART_Init();
+  44   1                
+  45   1             ds1302_init(); /*DS302³õÊ¼»¯º¯Êý*/
+  46   1             //ds1302_write_time();
+  47   1             ILI9325_Initial();  //³õÊ¼»¯LCD
+  48   1             ClearScreen(0xff00);
+  49   1                 LCD_PutString(80,100,"µ±Ç°ÈÕÆÚ",0x00ff,0xff00);
+  50   1             LCD_PutString(80,140,"µ±Ç°Ê±¼ä",0x00ff,0xff00);
+  51   1      
+  52   1        while(1)
+  53   1             {
+C51 COMPILER V7.06   MAIN                                                                  07/12/2010 23:37:52 PAGE 2   
+
+  54   2                  ds1302_read_time();//¶ÁÈ¡Ê±ÖÓÐÅÏ¢
+  55   2      
+  56   2                 disp();         //Òº¾§ÏÔÊ¾Ê±¼äÐÅÏ¢
+  57   2      
+  58   2                 //KeyPro();
+  59   2                         if(SetFlag)     //Èç¹û½ÓÊÕµ½´®¿ÚÐÅÏ¢Ôò¸üÐÂÊ±ÖÓ
+  60   2                           {
+  61   3                               for(i=0;i<8;i++)
+  62   3                               {
+  63   4                               time_buf1[i]=time_buf2[2*i]*10+time_buf2[2*i+1];//Êý¾ÝÕûºÏ£¬Èç2¸öÊý 1ºÍ5ÕûºÏ³É15
+  64   4                               }
+  65   3                               ds1302_write_time();
+  66   3                               SetFlag=0;     //Ê±ÖÓÐÅÏ¢¸üÐÂºó±êÖ¾Î»ÇåÁã
+  67   3                               }
+  68   2                   }
+  69   1       
+  70   1        }
+  71          
+  72          /******************************************************************/
+  73          /*                  ´®¿ÚÖÐ¶Ï³ÌÐò                                  */
+  74          /******************************************************************/
+  75          void UART_SER (void) interrupt 4 //´®ÐÐÖÐ¶Ï·þÎñ³ÌÐò
+  76          {
+  77   1          unsigned char Temp;          //¶¨ÒåÁÙÊ±±äÁ¿ 
+  78   1          
+  79   1          unsigned char i;
+  80   1         if(RI)                        //ÅÐ¶ÏÊÇ½ÓÊÕÖÐ¶Ï²úÉú
+  81   1           {
+  82   2                RI=0;                      //±êÖ¾Î»ÇåÁã
+  83   2                Temp=SBUF;                 //¶ÁÈë»º³åÇøµÄÖµ
+  84   2                time_buf2[i]=Temp&0x0F;
+  85   2                i++;
+  86   2                if(i==16)                  //Á¬Ðø½ÓÊÕ16¸ö×Ö·ûÐÅÏ¢
+  87   2                 {
+  88   3                  i=0;
+  89   3                      SetFlag=1;               //½ÓÊÕÍê³É±êÖ¾Î»ÖÃ1
+  90   3                 }
+  91   2            SBUF=Temp; //°Ñ½ÓÊÕµ½µÄÖµÔÙ·¢»ØµçÄÔ¶Ë
+  92   2                //P1=Temp&0x0F; //µ÷ÊÔÊ±ºòÏÔÊ¾
+  93   2               }
+  94   1         if(TI)  //Èç¹ûÊÇ·¢ËÍ±êÖ¾Î»£¬ÇåÁã
+  95   1           TI=0;
+  96   1      } 
+  97          
+  98          ////////////////////////////////////////////////////////////////////
+  99          void disp(void)
+ 100          
+ 101          {
+ 102   1       
+ 103   1       unsigned char  FirstLine[10];
+ 104   1      
+ 105   1       FirstLine[0]='2';
+ 106   1       FirstLine[1]='0';
+ 107   1       FirstLine[2]='0'+time_buf1[1]/10;
+ 108   1       FirstLine[3]='0'+time_buf1[1]%10;
+ 109   1       FirstLine[4]='-';
+ 110   1       FirstLine[5]='0'+time_buf1[2]/10;
+ 111   1       FirstLine[6]='0'+time_buf1[2]%10;
+ 112   1       FirstLine[7]='-';
+ 113   1       FirstLine[8]='0'+time_buf1[3]/10;
+ 114   1       FirstLine[9]='0'+time_buf1[3]%10;
+ 115   1      
+C51 COMPILER V7.06   MAIN                                                                  07/12/2010 23:37:52 PAGE 3   
+
+ 116   1       LCD_PutString(80,120,FirstLine,0x00ff,0xff00);
+ 117   1      
+ 118   1      
+ 119   1       
+ 120   1       FirstLine[0]='0'+time_buf1[4]/10;
+ 121   1       FirstLine[1]='0'+time_buf1[4]%10;
+ 122   1       FirstLine[2]=':';
+ 123   1       FirstLine[3]='0'+time_buf1[5]/10;
+ 124   1       FirstLine[4]='0'+time_buf1[5]%10;
+ 125   1       FirstLine[5]=':';
+ 126   1       FirstLine[6]='0'+time_buf1[6]/10;
+ 127   1       FirstLine[7]='0'+time_buf1[6]%10;
+ 128   1       FirstLine[8]=' ';
+ 129   1       FirstLine[9]='0'+time_buf1[7]%10;
+ 130   1      
+ 131   1      
+ 132   1      LCD_PutString(80,160,FirstLine,0x00ff,0xff00);
+ 133   1      
+ 134   1      
+ 135   1      
+ 136   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1968    ----
+   CONSTANT SIZE    =   3221    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     32      81
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

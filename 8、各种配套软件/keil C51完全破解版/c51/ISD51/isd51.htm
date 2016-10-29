@@ -1,0 +1,719 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+
+<head>
+<title>ISD51 (In-System Debugger) Release Notes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<style>
+<!--
+p            { font-family: Verdana; font-size: 10pt }
+.Release     { background-color: #CCCCCC; font-weight: bold; padding: 6 }
+.ToolT       { font-size: 8pt; color: #808080 }
+.TinyT       { font-size: 8pt; text-align: Center }
+ul           { font-family: Verdana; font-size: 10pt; list-style-type: square }
+ol           { font-family: Verdana; font-size: 10pt }
+h1           { font-family: Verdana; font-size: 18pt; color: #000080; font-weight: bold; text-align: Center; margin-right: 3 }
+h2           { font-family: Verdana; font-size: 14pt; color: #000080; font-weight: bold; margin-top: 24; margin-bottom: 3; background-color: #CCCCCC; padding: 6 }
+h3           { font-family: Verdana; font-size: 10pt; font-weight: bold; margin-top: 24; margin-bottom: 3; background-color: #CCCCCC; padding: 6 }
+h4           { font-family: Verdana; font-size: 10pt; font-weight: bold; margin-top: 24; margin-bottom: 3 }
+pre          { font-family: Courier New; font-size: 10pt; background-color: #CCFFCC; margin-left: 24; margin-right: 24 }
+li           { margin-top: 6; margin-bottom: 6 }
+-->
+
+</style>
+</head>
+
+<body>
+
+<h1>
+ ISD51 In-System Debugger
+</h1>
+
+<p class="TinyT">
+Information in this file, the accompany manuals, and software is<br>
+Copyright © Keil Software, Inc and Keil Elektronik GmbH.<br>
+All rights reserved.
+</p>
+
+<hr>
+<h3>Revision History:</h3>
+<ul>
+  <li>
+    <p align="left">Version 1.0: initial release</li>
+  <li>
+    <p align="left">Version 2.0: adds <a href="#FlashBreaks">flash breakpoints</a>, <a href="#UserIO">user I/O via
+    serial debugging interface</a> and address range for the memory verify function.</li>
+</ul>
+
+<hr>
+
+<h2>Contents</h2>
+
+<ol>
+  <li><a href="#Overview">ISD51 Overview</a></li>
+  <li><a href="#Philosophy">How ISD51 Works</a></li>
+  <li><a href="#Integration">Integrating ISD51 with User Programs</a></li>
+  <li><a href="#API">ISD51 API Routines</a></li>
+  <li><a href="#FlashBreaks">Flash Breakpoints</a></li>
+  <li><a href="#MSC1210">Hardware Breakpoints with TI MSC1210</a></li>
+  <li><a href="#Configuration">Configuring µVision2 for ISD51</a></li>
+  <li><a href="#Debugging">Debugging with ISD51</a></li>
+  <li><a href="#Troubleshooting">Troubleshooting</a></li>
+  <li><a href="#TechnicalSupport">Technical Support</a></li>
+</ol>
+
+
+<h2><a name="Overview"></a>ISD51 In-System Debugger Overview</h2>
+
+<p>
+ISD51 (In-System Debugger) provides a new debug monitor technology for 8051 user
+programs.  ISD51 a configurable library that you link to your user programs to
+provide support for program testing via the 8051 on-chip UART.
+</p>
+
+<p>
+The software and hardware requirements of ISD51 are minimal. It can run from
+external or on-chip CODE space and requires no special hardware components like
+von&nbsp;Neumann-wired memory.
+</p>
+
+<p>
+ISD51 works on both very small 8051 devices like the Philips LPC series and
+on complete systems that have access to the full CODE and XDATA address space.
+</p>
+
+
+<h3>Features</h3>
+
+<ul>
+  <li>Controlled program execution with single-stepping and multiple software breakpoints.</li>
+  <li>Viewing and changing CPU registers and memory.</li>
+  <li>Access to Special Function Registers (SFRs).</li>
+  <li>
+    Full-speed user program execution <u>when no software breakpoints are used.</u>
+  </li>
+  <li>
+    <a href="#FlashBreaks">Flash breakpoints</a> that do not affect execution speed.
+  </li>
+  <li>
+    <a href="#MSC1210">Hardware breakpoint</a> support (for some devices).
+  </li>
+  <li>
+    <a href="#UserIO">User serial I/O</a> via debugging interface.
+  </li>
+</ul>
+
+
+<h3>Requirements</h3>
+
+<ul>
+  <li>One 8051-compatible on-chip UART.</li>
+  <li>8051-compatible device with classic 8051 instruction set.</li>
+  <li>500-700 bytes of program code&mdash;depending on the number of SFRs.</li>
+  <li>6 bytes stack space.</li>
+  <li>1 byte IDATA RAM.</li>
+  <li>2 bytes IDATA RAM for each software breakpoint defined (hardware breakpoints of flash breakpoints do not need additional RAM).</li>
+</ul>
+
+
+<h3>Restrictions</h3>
+
+<p>
+The current version of ISD51 has the following restrictions:
+</p>
+
+<ul>
+  <li>Extended instruction 8051 sets are not supported.  Therefore ISD51 cannot be used on Philips 80C51MX or with Dallas
+    Contiguous Mode.</li>
+  <li>Code banking is not supported.</li>
+  <li>PDATA variable contents cannot be reviewed.</li>
+  <li>Unless ISD51 is configured for <a href="#MSC1210">hardware breakpoints</a> or <a href="#FlashBreaks">flash breakpoints</a>,
+    breakpoints or single stepping in interrupt functions does not work.</li>
+</ul>
+
+
+<h3>Benefits</h3>
+
+<ul>
+  <li>No special hardware modifications to your target system are required.</li>
+  <li>ISD51 may be used with any standard 8051 derivative.  It will not work on variants that use a extended instruction set like Dallas 390
+    contiguous mode or Philips 80C51MX.</li>
+  <li>Program code can be stored in on-chip Flash/EPROM/ROM or in off-chip EPROM.</li>
+  <li>No von&nbsp;Neumann memory, no XDATA space, no registers, and no bit-addressable space is required.</li>
+  <li>ISD51 may be linked and shipped with the final end-product.  ISD51 firmware is royalty-free.</li>
+  <li>ISD51 protects your software investment since it may only be used when the original source code is available.</li>
+</ul>
+
+
+<h2><a name="Philosophy"></a>How ISD51 Works</h2>
+
+<p>
+ISD51 adds a serial interrupt function (ISD51 interrupt) for the 8051 UART to your user
+program. When ISD51 connects to the µVision2 Debugger, the 8051 enters the ISD51 interrupt
+function. As long as the program execution is stopped, the 8051 program runs only the ISD51
+interrupt function. When the µVision2 Debugger issues a <b> Go</b> command, the 8051 leaves
+the ISD51 interrupt function and executes the user program.
+</p>
+
+<p>
+When you set <a href="#FlashBreaks">flash breakpoints</a> or <a href="#MSC1210">hardware breakpoints</a>, the 8051 executes
+the user program in full speed. <a href="#FlashBreaks">Flash breakpoints</a> can be easily configured
+for many current 8051 device variants that support In-Application Flash
+programming with sector sizes up to 128 Bytes.
+</p>
+
+<p>
+If the device does not support <a href="#FlashBreaks">flash breakpoints</a> you may use software
+breakpoints. In this case, the 8051 enters the ISD51
+interrupt function after each 8051 CPU instruction.  The ISD51 interrupt checks if the 8051
+program reached a breakpoint address and, if so, begins communication with the
+µVision2 Debugger.
+Therefore, the 8051 program executes considerably (about 100x) slower when software
+breakpoints are used.
+</p>
+
+<p>
+The µVision2 Debugger sends a 0xA5 character to the ISD51 interrupt function to halt the user program
+and start communication with the debugger. For this reason, 8051 program must be started when the
+µVision2 Debugger is invoked.
+</p>
+
+
+<h3>ISD51 Side Effects</h3>
+
+<ul>
+  <li>
+    <a href="#FlashBreaks">Flash breakpoints</a> still work, even when the interrupt system is disabled.
+    However, single stepping and software breakpoints work only when the ISD51 interrupt and the global interrupt system is enabled.
+    You may, of course, disable ISD51 operation during critical program sections.
+  </li>
+  <li>
+    Allows breakpoints even in ROM. If software breakpoints are set, the 8051 program
+    runs under control of the ISD51 interrupt function and execution speed is degraded
+    about 100x (programs run 100 times slower).
+  </li>
+  <li>
+    If the ISD51 interrupt is enabled it is possible to stop 8051 program execution from
+    within the µVision2 Debugger using the Stop toolbar button.
+  </li>
+</ul>
+
+
+<h2><a name="Integration"></a>Integrating ISD51 with User Programs</h2>
+
+<p>
+The following steps are required to add ISD51 features to your application.
+</p>
+
+<ol>
+  <li>Copy <b>ISD51.A51</b> and <b>ISD51.H</b> into your project folder from the <b>\C51\ISD51</b> folder.</li>
+  <li>Add <b> ISD51.A51</b> to your µVision2 Project.</li>
+  <li>Add <b> ISD51.H</b> to the C module that contains the main C function (using #include "ISD51.H").</li>
+  <li>
+    Check the configurations settings in <b> ISD51.H</b> and modify them, if necessary, to match
+    your target hardware.  The default configuration is suitable for classic 8051 devices
+    with 256 bytes of on-chip DATA/IDATA and a standard 8051-compatible on-chip UART.
+  </li>
+  <li>
+    Add baud rate initialization code for the on-chip UART to your C main function.  You may
+    copy this from the <b> \C51\EXAMPLES\HELLO</b> example program.
+  </li>
+  <li>
+    Add the appropriate <a href="#API">ISD51 startup function</a> to your C code.
+
+    <ul>
+      <li><b>ISDinit</b>: Initializes ISD51 and starts user program. When the
+        µVision2 Debugger
+        connects, program execution halts.</li>
+      <li><b>ISDwait</b>: Initializes ISD51 and waits until the µVision2 Debugger connects.</li>
+      <li>
+        <b>ISDcheck</b>: Checks to see if the µVision2 Debugger has connected with the 8051.
+        If so,
+        the ISD51 interrupt is initialized. <b>  ISDcheck</b> must be called periodically,
+        for example in the main loop of a typical embedded program.
+      </li>
+    </ul>
+  </li>
+  <li>
+    Build the user program and burn it into the 8051 device with classic programming utilities
+    like the Flash utilities from the silicon vendor, download programs from
+    evaluation board providers,
+    or an EPROM device programmer.
+  </li>
+</ol>
+
+<p>
+Program that demonstrate how to add ISD51 capability are provided in the <b> \C51\ISD51\EXAMPLES</b> folder.
+</p>
+
+
+<h2><a name="API"></a>ISD51 API Routines</h2>
+
+<p>
+ISD51 provides several functions your application may use. These functions
+and macros are prototyped in <b>ISD51.H</b>.
+</p>
+
+<h3>
+
+<b>Initialization Routines</b>
+</h3>
+<p>ISD51 is initialized with one of the following function calls:
+</p>
+
+<ul>
+  <li>
+    <b>void ISDinit (void)</b><br>
+    This routine initializes ISD51 for communication with the µVision2 debugger. After
+    invoking this routine, your 8051 user program continues execution normally.
+  </li>
+  <li>
+    <b>void ISDwait (void)</b><br>
+    This routine initializes ISD51 for communication with the µVision2 debugger and
+    waits until communication is established with the debugger. This function does
+    not return until the µVision2 Debugger connects with ISD51.
+  </li>
+  <li>
+    <b>void ISDcheck (void)</b><br>
+    This routine checks to see if the µVision2 Debugger is trying to connect with the
+    8051. If so, ISD51 is initialized for communication with the µVision2 debugger.
+    <b>
+    ISDcheck</b> should be called periodically in your 8051 user program.
+  </li>
+</ul>
+
+
+<h3>Breakpoint Handling</h3>
+<p>ISD51 breakpoint handling can be influenced with:
+</p>
+
+<ul>
+  <li>
+    <b>void ISDbreak (void)</b><br>
+    This routine forces execution of the ISD51 interrupt function. This allows you to
+    hard-code breakpoints into your user program. The µVision2 Debugger must be
+    connected to the user hardware before you invoke this routine.
+  </li>
+  <li>
+    <b>void ISDdisable (void)</b><br>
+    This routine disables the ISD51 interrupt which allows you to protect critical
+    program sequences in your user program from software breakpoints. Once this routine
+    is invoked, it is not possible to single step or set software breakpoints until
+    <b>ISDenable</b> is invoked.
+  </li>
+  <li>
+    <b>void ISDenable (void)</b><br>
+    This routine enables the ISD51 interrupt. After invoking the <b>ISDdisable</b> routine,
+    you must invoke <b>ISDenable</b> to re-enable the ISD51 interrupt.
+  </li>
+</ul>
+
+
+<h3><a name="UserIO"></a>User I/O via Serial Debugging Interface</h3>
+
+<p>ISD51 specific serial user input/output functions work via the UART interface that is used for debugging. The
+functions are enabled with the defines <b>ISD_PUTCHAR</b> and <b>ISD_GETKEY</b>.
+When enabled, functions like <b>printf</b> and <b>getchar</b> communicate via the <b>Serial Window</b> of the µVision2 debugger. Since the
+UART is already configured for ISD51 communication, no additional serial initialization
+is required. ISD51 defines in addition to the standard <b>putchar</b> and <b>_getkey</b>
+functions:</p>
+
+<ul>
+  <li><b>bit _iskey (void)<br>
+    </b>This routine returns 0 if no input character is available and returns 1
+    if a input character available.</li>
+</ul>
+
+
+<h2><a name="FlashBreaks"></a>  Flash Breakpoints</h2>
+
+<p>ISD51 supports flash breakpoints for devices with IAP (In-Application
+Programming) support and flash block sizes up to 128 Bytes. ISD51 modifies for
+flash breakpoints the code memory and inserts CALL instructions. The IAP
+functions are configured in the <b>ISD51.H</b>  header file that you
+have added to your project. The define <b>CBLK_SZ</b> specifies the flash block size
+and the macro <b>CWRITE</b> defines a flash erase and programming function.</p>
+
+<h3>Flash Breakpoint Side Effects</h3>
+<p>To perform a flash breakpoint, ISD51 inserts a CALL instruction in the user
+program. This avoids extra hardware for the breakpoint logic. However, the CALL instruction occupies up to three
+bytes and therefore
+breakpoints may have side effects when set before a label (jump target) on one
+or two byte CPU instructions. The following example demonstrates this
+problem.</p>
+
+<h4>User Program</h4>
+
+<pre>0100  E4        CLR     A
+0101  74 03     MOV     A,#3
+ :     :         :
+ :     :         :
+0110  80 ED     SJMP    0101</pre>
+
+<p>First, the user program is executed until address 0x110 with a µVision2
+debugger command like <b>G, 0x110</b>.</p>
+<p>Then, a breakpoint is set at address 0x100. The breakpoint is realized by
+writing a CALL instruction into the user program which means that the user
+program is modified by the breakpoint.</p>
+
+<h4>User Program Modified Due to Flash Breakpoints</h4>
+
+<pre>0100  XX        LCALL           ; An CALL instruction is
+0101  XX XX     ???             ; written at address 0x100. 
+ :     :         :
+ :     :         :
+0110  80 ED     SJMP    0101</pre>
+
+<p>When the user program continues execution at address 0x110 the program jumps
+to address 0x101. But this memory location is modified due to the breakpoint at
+address 0x100. Therefore, the MOV&nbsp;A,#3 instruction will be not executed and
+the behavior of the user program is unpredictable.</p>
+<p>In C applications, use the disassembly window and check
+if the instruction sequence described above exists. The following C&nbsp;statements
+may cause such side effects:</p>
+
+
+<ul>
+<li>Breakpoint near the beginning of a loop.</li>  
+<pre>  while (...) {   // a breakpoint near a loop start may cause problems.
+    ...;
+  }</pre>
+
+<li>Breakpoint near the end of a function.</li>  
+<pre>void func1(void) {
+  ...
+}                 // a breakpoint here, may modify the beginning of the next function.
+
+void func2(void) {
+  ...
+}</pre>
+<p><b>Note:</b>  The linker does not locate functions in ascending sequence.  </p>
+</ul>
+
+<h2><a name="MSC1210"></a>     Hardware Breakpoints on TI MSC1210</h2>
+
+<p>The TI MSC1210 supports hardware breakpoint registers that can be enabled in the <b>ISD51.H</b>  header file
+with the define <b>TI_MSC1210_BREAKS</b>. When used, this
+hardware breakpoints may
+generate the following side effects:</p>
+
+<ul>
+  <li>Execution may stop up to two CPU instructions after the breakpoint.</li>
+  <li>The <b>Read</b> and <b>Write</b> attribute is ignored for XDATA access breakpoints.  
+      Program execution will stop on any access to the specified address.</li>
+  <li>Hardware breakpoints need the <b> interrupt 6</b> vector (address 0x33),
+    but <b>interrupt 6</b> is also used for other on-chip 
+      peripherals such as A/D Converter, (milli)second timer, PFI and SPI
+    interface. Therefore 
+      ISD51 relocates <b>interrupt 6</b> to <b>interrupt 13</b> (address 0x6B).
+    User applications with ISD51 must use <b>interrupt 13</b> instead
+      of <b>interrupt 6</b>.  </li>
+  <li>Execution may stop on wrong addresses due to instruction prefetches. When
+    a prefetch occurs on a break location, the breakpoint is triggered even when
+    the instruction is not executed. This may happen on following
+    situations:</li>
+<ol>
+<li>Breakpoint after a loop:</li>  
+<pre>void func(void) {
+  while(...) {
+    ...;
+  }
+  ...;        // a breakpoint here may stop, even when the loop is not finished
+}</pre>
+
+<li>Breakpoint at the beginning of a function:</li>  
+<pre>void func1(void) {
+...
+}
+
+void func2(void) {  // a breakpoint here may stop, when the CPU is at the end of func1
+...
+}</pre>
+<p><b>Note:</b>  The linker does not locate functions in ascending sequence.
+Therefore the function order in the C source module will not match the order in
+the memory. Review the function segment information in the linker map (*.M51)
+file or use the disassembly window to determine the function order in memory.  </p>
+
+<li>Breakpoint after a function call:</li>  
+<pre>void func1(void) {
+...
+  func2();
+...         // a breakpoint here may stop the CPU at the beginning of func2
+}</pre>
+
+<b>Note:</b> This affects even the <b>Step Over</b> command which inserts also a breakpoint
+after CALL instructions. 
+The CPU may stop at the beginning of the called function. 
+</ol>
+
+</ul>
+
+
+<h2><a name="Configuration"></a>Configuring µVision2 for ISD51</h2>
+
+<p>
+Once you have added ISD51 to your program, you may configure the µVision2 Debugger
+for communication with the 8051 target system.
+</p>
+
+<ol>
+  <li>Start the 8051 application on the target system before you start the
+    µVision2 Debugger.</li>
+  <li>In µVision2, select Project - Options for Target - Debug:  Use: Keil ISD51 In-System
+    Debugger.</li>
+  <li>In the same dialog, enable  Load Application at Startup so that the
+    µVision2 Debugger loads the symbolic information for your 8051 user program.</li>
+  <li>In the same dialog, disable  Go till main. Your user program will be started by the hardware reset of the 8051 target system.</li>
+  <li>In the same dialog, open the ISD51 Driver Settings dialog to configure the following:</li>
+</ol>
+
+
+<blockquote>
+
+<h3>COM Port Settings</h3>
+
+<ul>
+  <li><b>Port</b>: PC COM port used to connect to the 8051 target hardware.</li>
+  <li><b>Baudrate</b>: Communication baud rate with the 8051 target hardware.</li>
+  <li><b>RTS Logical</b>: Level on the RTS line of the COM Port (see below).</li>
+  <li><b>DTS Logical</b>: Level on the DTS line of the COM Port (see below).</li>
+</ul>
+
+
+<h3>RTS and DTS settings</h3>
+
+<ul>
+  <li><b>Always high (active)</b>: Signal is always active during µVision2 Debugger communication.</li>
+  <li><b>Always low (in-active)</b>: Signal is always inactive during µVision2 Debugger communication.</li>
+  <li><b>Reset high 500ms (active) on start</b>: on Reset Command of
+    µVision2 Debugger the Signal is active for 500 mSec.</li>
+  <li><b>Reset low 500ms (in-active) on start</b>: on Reset Command of
+    µVision2 Debugger the Signal is inactive for 500 mSec.</li>
+  <li><b>Reset pulse: 500ms high, 10ms low</b>: on Reset Command of
+    µVision2 Debugger the Signal is active for 500 mSec, then in-active for 10
+    mSec, and then active again.</li>
+  <li><b>Reset pulse: 500ms low, 10ms high</b>: on Reset Command of
+    µVision2 Debugger the Signal is in-active for 500 mSec, then active for 10
+    mSec, and then in-active again.</li>
+</ul>
+
+
+<h3>Cache Options</h3>
+
+<p>
+The ISD51 driver implements data caches to speed-up screen updates.
+</p>
+
+<ul>
+  <li>
+    Disable the cache options to view actual (un-cached) values of DATA (and
+    SFR), IDATA, or XDATA space when you halt program execution. This way you
+    can be certain you are viewing the current values of I/O ports, timers, or
+    memory-mapped peripherals.
+  </li>
+  <li>Enable the cache options to obtain maximum performance.</li>
+</ul>
+
+
+<h3>Code Breakpoint Options</h3>
+
+<p>
+This option selects whether or not ISD51 uses software breakpoints, hardware
+breakpoints, or a combination of both.
+</p>
+
+<ul>
+  <li>If your target 8051 device does not support hardware breakpoints, you must select software breakpoints only.</li>
+  <li>If your target 8051 device supports hardware breakpoints, you must use software breakpoints when no hardware breakpoints are available.</li>
+</ul>
+
+
+<h3>Miscellaneous Options</h3>
+
+<p>
+The <b>Verify if Application in ROM is identical to current Project</b> option selects whether
+or not the µVision2 ISD51 Debugger Driver compares the program code in the 8051 target with the
+program code of the current project when initializing ISD51 communications.  You may disable
+this option to speed-up the connection time of the debugger with the target system.
+</p>
+
+<p>If your application requires specific configuration areas, you may configure
+the verify address range with the defines <b>CMP_START</b> and <b>CMP_END</b> in
+the <b>ISD51.H</b> header file.</p>
+
+
+<h3>ISD51 Identification</h3>
+
+<p>
+This box displays the version number and other status information when the
+µVision2 Debugger
+connects to the ISD51 running on the 8051 target system.  You may check this information when
+you open the ISD51 Driver Settings dialog during debugging.
+</p>
+
+</blockquote>
+
+
+<h2><a name="Debugging"></a>Debugging with ISD51</h2>
+
+<p>
+Once the µVision2 Debugger is configured, you may start debugging with Debug - Start/Stop
+Debug Session.  The µVision2 Debugger connects to the 8051 target system via the ISD51 software.
+</p>
+
+<p>
+ISD51 supports most µVision2 debugger features. For instance, you may single-step
+through code, set breakpoints, and run your application.  Variables may be viewed
+using the standard debugger features.
+</p>
+
+
+<h3>µVision2 Restrictions When Using IDS51</h3>
+
+<p>
+There are several restrictions you must consider when using ISD51 and the µVision2 Debugger.
+</p>
+
+
+<ul>
+  <li>
+    It is not possible to use Debug - Memory Map to change the memory mapping of the 8051 system.
+    This is because the memory mapping of the 8051 target system depends on hardware components.
+  </li>
+  <li>
+    The Performance Analyzer and Code Coverage functions are not available with ISD51.
+  </li>
+  <li>
+    The Periodic Window Update Option may not be used with ISD51.
+  </li>
+</ul>
+
+
+<h2><a name="Troubleshooting"></a>Troubleshooting</h2>
+
+<p>
+If the µVision2 Debugger does not connect to the ISD51 hardware you should first verify
+that the target system's serial interface is correctly configured.  You may check this by using the
+µVision2 Simulation as follows:
+</p>
+
+
+<ol>
+  <li>Select Project - Options for Target - Debug:  Use Simulator.</li>
+  <li>
+    Start program simulation with Debug - Start/Stop Debug Session. This loads the
+    user program in simulation mode.
+  </li>
+  <li>Start running the user program (Debug - Go).</li>
+  <li>
+    Verify the settings of the UART with the Serial Port Dialog (Peripherals - Serial).
+    The baud rate is displayed correctly if you have entered the correct XTAL frequency
+    in Project - Options for Target - Target - Xtal. Typically, the baud rate will not
+    match the PC baud rate 100%, but it should be within 2.5%.
+  </li>
+  <li>
+    Check serial communications:
+
+    <ul>
+      <li>Open the serial communication window (View - Serial Window).</li>
+      <li>Right-click in the Serial Window and select Hex Mode from the context menu.</li>
+      <li>
+        Enter <b>sin=0xA5</b> in the Command Window to Input a 0xA5 character
+        in the serial input stream.
+      </li>
+    </ul>
+
+    The µVision2 Simulator should then simulate the IDS51 interrupt and display 0xF7
+    followed by 6 more hex values in the serial window.
+  </li>
+</ol>
+
+<p>
+If everything is correctly configured and you are still unable to connect to the IDS51 hardware,
+your 8051 program may call the following function after initializing the serial interface.
+</p>
+
+<pre>/*
+ * Test Function: verify serial communication with HyperTerminal
+ */
+
+void TestSerial (void) {
+  char c = 'A';
+
+  TI = 1;
+  while (1) {
+    if (RI) {
+      c = SBUF;
+      RI = 0;
+    }
+
+  while (!TI);
+
+  TI = 0;
+  SBUF = c;
+  }
+}</pre>
+
+
+<p>
+This function outputs the character <b>A</b> via the serial interface. If you
+transmit a
+character via the serial interface to the user program, that character will be sent instead.  You may
+check this using a terminal program like HyperTerminal to see if the 8051 correctly outputs the
+<b>A</b>
+character and if the output character changes when you send a different character.
+</p>
+
+
+<h2><a name="TechnicalSupport"></a>Technical Support</h2>
+
+<p>
+At Keil Software, we are dedicated to providing you with the best development
+tools and technical support. That's why we offer numerous ways you can get the
+technical support you need to complete your embedded projects.
+</p>
+
+<ul>
+  <li>
+    <a href="http://www.keil.com/support"><b>Technical Support Knowledgebase</b></a><br>
+    More than 1500 technical support questions and answers are available in the Support
+    Solutions Knowledgebase. When a new question arises, it is added to the knowledgebase
+    which is continuously published to the Web. This enables you to get technical support
+    at times when our support staff is unavailable.
+  </li>
+  <li>
+    <a href="http://www.keil.com/appnotes"><b>Application Notes</b></a><br>
+    Numerous Application Notes help you decipher complex features and implement
+    robust applications.
+  </li>
+  <li>
+    <a href="http://www.keil.com/download"><b>Example Programs and Files</b></a><br>
+    Utility programs, example code, and sample projects are regularly added to
+    the Download File section of the web site.
+  </li>
+  <li>
+    <a href="http://www.keil.com/discuss"><b>Discussion Forum</b></a><br>
+    Post questions, comments, and suggestions to the Keil Software Discussion
+    Forum and interact with other Keil users around the world.
+  </li>
+</ul>
+
+<p>
+Many of the features of our Technical Support Knowledgebase and
+Web Site are the results of your suggestions. If you have any
+ideas that will improve them, please
+<a href="http://www.keil.com/support/feedback.asp"> give us your feedback</a>!
+</p>
+
+
+<hr>
+
+<p class="TinyT">
+Copyright © Keil Software, Inc. and Keil Elektronik GmbH.<br>
+All rights reserved.<br>
+Visit our web site at <a href="http://www.keil.com">www.keil.com</a>.
+</p>
+
+</body>
+
+</html>

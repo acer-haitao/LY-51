@@ -1,0 +1,94 @@
+C51 COMPILER V7.06   MAIN                                                                  07/12/2010 23:37:19 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          /*-----------------------------------------------
+   2            名称：彩屏显示汉字
+   3            论坛：www.doflye.net
+   4            编写：shifang
+   5            日期：2009.5
+   6            修改：无
+   7            内容：
+   8            -----------------------------------------------*/
+   9          #include<reg52.h>
+  10          #include"9325tp.h"
+  11          
+  12          /*-----------------------------------------------
+  13                            全局变量
+  14          -----------------------------------------------*/
+  15          #define TOP    10
+  16          #define BOTTOM 10
+  17          #define LEFT   15
+  18          #define RIGHT  10
+  19          #define DISTANCE  20
+  20          
+  21          /* LCD color */
+  22          #define White          0xFFFF
+  23          #define Black          0x0000
+  24          #define Blue           0x001F
+  25          #define Blue2          0x051F
+  26          #define Red            0xF800
+  27          #define Magenta        0xF81F
+  28          #define Green          0x07E0
+  29          #define Cyan           0x7FFF
+  30          #define Yellow         0xFFE0
+  31          
+  32          
+  33          
+  34          
+  35          /*------------------------------------------------
+  36                                主函数
+  37          ------------------------------------------------*/
+  38          main()
+  39          {
+  40   1       // unsigned char i;
+  41   1      
+  42   1             ILI9325_Initial(); //初始化LCD
+  43   1             CLR_Screen(White); //用背景色清屏
+  44   1             //绘制矩形平面
+  45   1                 Show_RGB(0,120,0,64,Blue2);
+  46   1                 Show_RGB(120,240,0,64,Black);
+  47   1             Show_RGB(0,120,64,128,White);
+  48   1             Show_RGB(120,240,64,128,Blue);
+  49   1             Show_RGB(0,120,128,192,Red);
+  50   1             Show_RGB(120,240,128,192,Magenta);
+  51   1                 Show_RGB(0,120,192,256,Green);
+  52   1                 Show_RGB(120,240,192,256,Cyan);
+  53   1             Show_RGB(0,120,256,320,Yellow);
+  54   1                 Show_RGB(120,240,256,320,Red);
+  55   1             
+C51 COMPILER V7.06   MAIN                                                                  07/12/2010 23:37:19 PAGE 2   
+
+  56   1                 LCD_PutString(0,0,"专业电子论坛",White,Blue2);
+  57   1                 LCD_PutString(0,16,"www.doflye.net",White,Blue2);
+  58   1                 LCD_PutString(0,32,"专业开发板",White,Blue2);
+  59   1                 LCD_PutString(0,48,"浩豚电子科技",White,Blue2);
+  60   1      
+  61   1        while(1)
+  62   1             {
+  63   2                 
+  64   2                 }
+  65   1       
+  66   1        }
+  67          
+  68          
+  69          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    379    ----
+   CONSTANT SIZE    =     52    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

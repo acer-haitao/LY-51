@@ -1,0 +1,114 @@
+C51 COMPILER V7.06   18B20                                                                 06/30/2010 15:57:03 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE 18B20
+OBJECT MODULE PLACED IN 18b20.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE 18b20.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          
+   2          #include<reg52.h>     //包含头文件，一般情况不需要改动，头文件包含特殊功能寄存器的定义
+   3          #include<math.h>
+   4          #include<INTRINS.H>
+   5          #include"18b20.h"
+   6          
+   7          
+   8          /******************************************************************/
+   9          /*                    延时函数                                    */
+  10          /******************************************************************/
+  11          void delay(unsigned int i)//延时函数
+  12          {
+  13   1       while(i--);
+  14   1      }
+  15          /******************************************************************/
+  16          /*                    初始化                                      */
+  17          /******************************************************************/
+  18          void Init_DS18B20(void)
+  19          {
+  20   1       unsigned char x=0;
+  21   1       DQ = 1;    //DQ复位
+  22   1       delay(8);  //稍做延时
+  23   1       DQ = 0;    //单片机将DQ拉低
+  24   1       delay(80); //精确延时 大于 480us
+  25   1       DQ = 1;    //拉高总线
+  26   1       delay(10);
+  27   1       x=DQ;      //稍做延时后 如果x=0则初始化成功 x=1则初始化失败
+  28   1       delay(5);
+  29   1      }
+  30          
+  31          /******************************************************************/
+  32          /*                    读一个字节                                  */
+  33          /******************************************************************/
+  34          unsigned char ReadOneChar(void)
+  35          {
+  36   1      unsigned char i=0;
+  37   1      unsigned char dat = 0;
+  38   1      for (i=8;i>0;i--)
+  39   1       {
+  40   2        DQ = 0; // 给脉冲信号
+  41   2        dat>>=1;
+  42   2        DQ = 1; // 给脉冲信号
+  43   2        if(DQ)
+  44   2         dat|=0x80;
+  45   2        delay(5);
+  46   2       }
+  47   1       return(dat);
+  48   1      }
+  49          
+  50          /******************************************************************/
+  51          /*                 写一个字节                                     */
+  52          /******************************************************************/
+  53          void WriteOneChar(unsigned char dat)
+  54          {
+  55   1       unsigned char i=0;
+C51 COMPILER V7.06   18B20                                                                 06/30/2010 15:57:03 PAGE 2   
+
+  56   1       for (i=8; i>0; i--)
+  57   1       {
+  58   2        DQ = 0;
+  59   2        DQ = dat&0x01;
+  60   2        delay(5);
+  61   2        DQ = 1;
+  62   2        dat>>=1;
+  63   2       }
+  64   1      delay(5);
+  65   1      }
+  66          
+  67          /******************************************************************/
+  68          /*                   读取温度                                     */
+  69          /******************************************************************/
+  70          unsigned int ReadTemperature(void)
+  71          {
+  72   1      unsigned char a=0;
+  73   1      unsigned int b=0;
+  74   1      unsigned int t=0;
+  75   1      Init_DS18B20();
+  76   1      WriteOneChar(0xCC); // 跳过读序号列号的操作
+  77   1      WriteOneChar(0x44); // 启动温度转换
+  78   1      delay(200);
+  79   1      Init_DS18B20();
+  80   1      WriteOneChar(0xCC); //跳过读序号列号的操作 
+  81   1      WriteOneChar(0xBE); //读取温度寄存器等（共可读9个寄存器） 前两个就是温度
+  82   1      a=ReadOneChar();   //低位
+  83   1      b=ReadOneChar();   //高位
+  84   1      
+  85   1      b<<=8;
+  86   1      t=a+b;
+  87   1      
+  88   1      return(t);
+  89   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    169    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

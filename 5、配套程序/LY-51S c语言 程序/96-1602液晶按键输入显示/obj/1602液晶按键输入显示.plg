@@ -1,0 +1,15 @@
+<html>
+<body>
+<pre>
+<h1>礦ision2 Build Log</h1>
+<h2>Project:</h2>
+D:\桌面\FLY-51S 程序\96-1602液晶按键输入显示\1602液晶按键输入显示.uv2
+Project File Date:  05/21/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling 1602液晶按键输入显示.c...
+linking...
+Program Size: data=11.0 xdata=0 code=540
+creating hex file from ".\obj\1602液晶按键输入显示"...
+".\obj\1602液晶按键输入显示" - 0 Error(s), 0 Warning(s).

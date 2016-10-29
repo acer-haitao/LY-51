@@ -1,0 +1,12 @@
+The MEASURE program uses the Port1 and Port2 inputs of the 
+P89LPC932 to simulate a datalogger.
+
+This MEASURE program is available in several targets:
+
+  Simulator:         for µVision2 Debugger testing with simulator
+  MCB900 - Run:      for MCB900 board in Run Mode
+  EPM900 - Emulator: for EPM900 Emulator/Programmer Module
+
+Use the following jumper settings on the MCB900 board:
+     RUN: ON    RESET: OFF   PROG: OFF
+

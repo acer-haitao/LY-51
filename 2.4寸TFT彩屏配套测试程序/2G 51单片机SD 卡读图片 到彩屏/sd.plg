@@ -1,0 +1,19 @@
+<html>
+<body>
+<pre>
+<h1>µVision2 Build Log</h1>
+<h2>Project:</h2>
+F:\software\≤ ∆¡œ‡πÿ\2.4¥ÁTFT≤ ∆¡≈‰Ã◊≤‚ ‘≥Ã–Ú\2G 51µ•∆¨ª˙SD ø®∂¡Õº∆¨ µΩ≤ ∆¡\sd.uv2
+Project File Date:  12/28/2009
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling sd.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_CLEARSCREEN?SD
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SDWRITEBLOCK?SD
+Program Size: data=53.0 xdata=512 code=1614
+creating hex file from "sd"...
+"sd" - 0 Error(s), 2 Warning(s).

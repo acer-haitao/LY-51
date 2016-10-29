@@ -1,0 +1,298 @@
+C51 COMPILER V7.06   TOUCH                                                                 12/02/2010 09:23:13 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE TOUCH
+OBJECT MODULE PLACED IN .\Obj\touch.obj
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE Source\touch.C BROWSE DEBUG OBJECTEXTEND PRINT(.\List\touch.lst) OBJECT(.\O
+                    -bj\touch.obj)
+
+stmt level    source
+
+   1          
+   2          #include"reg52.h"
+   3          #include"9325tp.h"
+   4          #include"touch.h"
+   5          
+   6          sbit ads7846_CLK = P1^0;
+   7          sbit ads7846_CS  = P1^1;
+   8          sbit ads7846_DIN = P1^2;
+   9          //sbit ads7846_BUSY= P1^3;
+  10          sbit ads7846_DOUT = P1^4;
+  11          sbit ads7846_IRQ = P1^5;   
+  12          
+  13          #define BColor 0x1f00 //¶¨Òå±³¾°É«
+  14          #define FColor 0x001f //¶¨ÒåÇ°¾°É«
+  15          
+  16          
+  17          /*----------------------------------------------------------------
+  18                                 ´¥Ãþº¯Êý
+  19          ----------------------------------------------------------------*/
+  20          
+  21          void Touch ()
+  22          {
+  23   1          unsigned int row;   
+  24   1          unsigned int line;
+  25   1          float x,y, x1,y1,x2,y2;//temp1,temp2;
+  26   1                    
+  27   1          CLR_Screen(BColor); //ÇåÆÁ
+  28   1          ADS7846_Initial();  //³õÊ¼»¯´¥ÃþÐ¾Æ¬
+  29   1        
+  30   1         Rectangle(1,9,19,11,FColor); //ÔÚÕâ¸ö×ø±ê»­µã£¬½ÃÕýÓÃ,Ê®×Ö×ø±ê
+  31   1         Rectangle(9,1,11,19,FColor);
+  32   1         while(ads7846_IRQ);       //µÈ´ý´¥ÃþÖÐ¶ÏÐÅºÅ
+  33   1          {
+  34   2               x1=GUI_TOUCH_X_MeasureX(); //¶ÁÈ¡¸ÃµãµÄ´¥ÃþÖµ
+  35   2               y1=GUI_TOUCH_X_MeasureY(); 
+  36   2              }
+  37   1        Rectangle(1,9,19,11,BColor); 
+  38   1        Rectangle(9,1,11,19,BColor); //Çå³ýÕâ¸öµã£¬²¢×¼±¸»­ÏÂÒ»¸öµã
+  39   1        while(!ads7846_IRQ);       //µÈ´ýÀë¿ª´¥ÃþÆÁ£¬·ÀÖ¹¸ÉÈÅÏÂÒ»¸öµã
+  40   1        Rectangle(221,309,239,311,FColor);
+  41   1        Rectangle(229,301,231,319,FColor);//ÆÁµÄ¶Ô½Ç»­µÚ¶þ¸öµã
+  42   1        while(ads7846_IRQ);        //µÈ´ý´¥ÃþÖÐ¶ÏÐÅºÅ
+  43   1          {
+  44   2               x2=GUI_TOUCH_X_MeasureX(); //¶ÁÈ¡¸Ãµã´¥ÃþÖµ
+  45   2               y2=GUI_TOUCH_X_MeasureY(); 
+  46   2              }
+  47   1        Rectangle(221,309,239,311,BColor);
+  48   1        Rectangle(229,301,231,319,BColor);
+  49   1        delayms(200);               //ÑÓÊ±
+  50   1        
+  51   1              while(1)
+  52   1              {
+  53   2      
+  54   2                while(!ads7846_IRQ)
+C51 COMPILER V7.06   TOUCH                                                                 12/02/2010 09:23:13 PAGE 2   
+
+  55   2                {
+  56   3                         do{
+  57   4                                      x=GUI_TOUCH_X_MeasureX(); row=220*(x-x1)/(x2-x1)+10; //¶ÁÈ¡µ±Ç°´¥ÃþÖµ¡£²¢¸ù¾Ý½ÃÕýµãµÄÖµËã³öÊµ¼ÊµÄÏÔÊ¾×
+             -ø±ê
+  58   4                                      y=GUI_TOUCH_X_MeasureY(); line=300*(y-y1)/(y2-y1)+10;
+  59   4                      
+  60   4                           }
+  61   3      
+  62   3                         while((x>4095)||(x<0)||(y>4095)||(y<0));               
+  63   3      
+  64   3                              //if((row>20)&&(row<=50)&&(line>330)&&(line<340))    CLR_Screen(0xf800); 
+  65   3                              //if((row>70)&&(row<=110)&&(line>330)&&(line<340))   CLR_Screen(0x07e0);        
+  66   3                              //if((row>130)&&(row<=170)&&(line>330)&&(line<340))  CLR_Screen(0x0000);
+  67   3                      if((row>190)&&(row<=220)&&(line>330)&&(line<340))  CLR_Screen(0xffff);
+  68   3                 
+  69   3                  if((line>0)&&(line<320))  Show_Touch(row,line,0x001f); //320x240×ø±êÄÚÖ±½Ó»­µã
+  70   3                
+  71   3                       }
+  72   2               }    
+  73   1      
+  74   1      
+  75   1      }
+  76          /*----------------------------------------------------------------
+  77                                    ´¥ÃþÏÔÊ¾µãº¯Êý
+  78          ----------------------------------------------------------------*/
+  79          void Show_Touch(unsigned int x,unsigned int y,unsigned int Color)
+  80          {
+  81   1       Put_pixel(x-1,y,Color);        
+  82   1       Put_pixel(x,y-1,Color); 
+  83   1       Put_pixel(x-1,y-1,Color); 
+  84   1       Put_pixel(x,y,Color);
+  85   1       Put_pixel(x+1,y,Color);
+  86   1       Put_pixel(x,y+1,Color);
+  87   1       Put_pixel(x+1,y+1,Color);
+  88   1       Put_pixel(x-1,y+1,Color);
+  89   1       Put_pixel(x+1,y-1,Color);
+  90   1      
+  91   1      }    
+  92          
+  93          /*----------------------------------------------------------------
+  94                                  ´¥ÃþÆÁ³õÊ¼»¯º¯Êý
+  95          ----------------------------------------------------------------*/
+  96          void   ADS7846_Initial(void)
+  97          {
+  98   1              ads7846_CS=0;
+  99   1              ads7846_DIN=0;
+ 100   1              ads7846_CLK=0;
+ 101   1              Write_ADS7846(0xa0);//#10100000B
+ 102   1              ads7846_DIN=0;
+ 103   1              ads7846_CLK=1;
+ 104   1              ads7846_CLK=0;
+ 105   1              //while(ads7846_BUSY);
+ 106   1              Write_ADS7846(0xe0);//#11100000B
+ 107   1              ads7846_DIN=0;
+ 108   1              ads7846_CLK=1;
+ 109   1              ads7846_CLK=0;
+ 110   1              //while(ads7846_BUSY);
+ 111   1              Write_ADS7846(0xf0);//#11110000B
+ 112   1              ads7846_DIN=0;
+ 113   1              ads7846_CLK=1;
+ 114   1              ads7846_CLK=0;
+ 115   1              //while(ads7846_BUSY);
+C51 COMPILER V7.06   TOUCH                                                                 12/02/2010 09:23:13 PAGE 3   
+
+ 116   1              Write_ADS7846(0x80);//#10000000B
+ 117   1              ads7846_DIN=0;
+ 118   1              ads7846_CLK=1;
+ 119   1              ads7846_CLK=0;
+ 120   1              //while(ads7846_BUSY);
+ 121   1              ads7846_CS=1;
+ 122   1      }
+ 123          /*----------------------------------------------------------------
+ 124                                   ¶ÁÈ¡´¥Ãþ²ÎÊýxÖµ
+ 125          ----------------------------------------------------------------*/
+ 126          unsigned int Read_ADS7846_x(void)
+ 127          {
+ 128   1          unsigned int x;
+ 129   1              unsigned char i;
+ 130   1              bit dat;
+ 131   1      
+ 132   1              x=0;
+ 133   1              ads7846_CS=0;
+ 134   1              Write_ADS7846(0xd0);//#0x90
+ 135   1              ads7846_DIN=0;
+ 136   1              ads7846_CLK=1;
+ 137   1              ads7846_CLK=0;
+ 138   1              dat=ads7846_DOUT;
+ 139   1              x=x|dat;
+ 140   1              //while(ads7846_BUSY);
+ 141   1              for(i=0;i<11;i++)
+ 142   1              {
+ 143   2                      x=x<<1;
+ 144   2                      ads7846_CLK=1;
+ 145   2                      ads7846_CLK=0;
+ 146   2                      dat=ads7846_DOUT;
+ 147   2                      x=x|dat;
+ 148   2              }
+ 149   1              ads7846_CS=1;
+ 150   1          return x;
+ 151   1      }
+ 152          /*----------------------------------------------------------------
+ 153                                   ¶ÁÈ¡´¥Ãþ²ÎÊýyÖµ
+ 154          ----------------------------------------------------------------*/
+ 155          unsigned int Read_ADS7846_y(void)
+ 156          {
+ 157   1              unsigned int y;
+ 158   1              unsigned char i;
+ 159   1              bit dat;
+ 160   1      
+ 161   1              y=0;
+ 162   1              ads7846_CS=0;
+ 163   1              Write_ADS7846(0x90);//#0xd0
+ 164   1              ads7846_DIN=0;
+ 165   1              ads7846_CLK=1;
+ 166   1              ads7846_CLK=0;
+ 167   1              dat=ads7846_DOUT;
+ 168   1              y=y|dat;
+ 169   1              //while(ads7846_BUSY);
+ 170   1              for(i=0;i<11;i++)
+ 171   1              {
+ 172   2                      y=y<<1;
+ 173   2                      ads7846_CLK=1;
+ 174   2                      ads7846_CLK=0;
+ 175   2                      dat=ads7846_DOUT;
+ 176   2                      y=y|dat;
+ 177   2              }
+C51 COMPILER V7.06   TOUCH                                                                 12/02/2010 09:23:13 PAGE 4   
+
+ 178   1              ads7846_CS=1;
+ 179   1          return y;
+ 180   1      }
+ 181          /*----------------------------------------------------------------
+ 182                                 Ð´Èë´¥ÃþÐ¾Æ¬Ö¸Áî
+ 183          ----------------------------------------------------------------*/
+ 184          void   Write_ADS7846(unsigned char x)
+ 185          {
+ 186   1          unsigned char i;
+ 187   1              bit dat;
+ 188   1              ads7846_CS=0;
+ 189   1              ads7846_DIN=0;
+ 190   1              ads7846_CLK=0;
+ 191   1              for(i=0;i<8;i++)
+ 192   1              {
+ 193   2                      dat=x&0x80;
+ 194   2                      ads7846_DIN=dat;
+ 195   2                      ads7846_CLK=1;
+ 196   2                      ads7846_CLK=0;
+ 197   2                      x=x<<1;
+ 198   2              }
+ 199   1      }
+ 200          
+ 201          int  GUI_TOUCH_X_MeasureX(void) 
+ 202          {
+ 203   1              unsigned char t=0,t1,count=0;
+ 204   1              unsigned short int databuffer[10]={5,7,9,3,2,6,4,0,3,1};//Êý¾Ý×é
+ 205   1              unsigned short temp=0,X=0;      
+ 206   1              
+ 207   1              while(count<10)//Ñ­»·¶ÁÊý10´Î
+ 208   1              {                 
+ 209   2                      databuffer[count]= Read_ADS7846_x();
+ 210   2                      count++; 
+ 211   2              }  
+ 212   1              if(count==10)//Ò»¶¨Òª¶Áµ½10´ÎÊý¾Ý,·ñÔò¶ªÆú
+ 213   1              {  
+ 214   2                  do//½«Êý¾ÝXÉýÐòÅÅÁÐ
+ 215   2                      {       
+ 216   3                              t1=0;             
+ 217   3                              for(t=0;t<count-1;t++)
+ 218   3                              {
+ 219   4                                      if(databuffer[t]>databuffer[t+1])//ÉýÐòÅÅÁÐ
+ 220   4                                      {
+ 221   5                                              temp=databuffer[t+1];
+ 222   5                                              databuffer[t+1]=databuffer[t];
+ 223   5                                              databuffer[t]=temp;
+ 224   5                                              t1=1; 
+ 225   5                                      }  
+ 226   4                              }
+ 227   3                      }while(t1);                                               
+ 228   2                      X=(databuffer[3]+databuffer[4]+databuffer[5])/3;          
+ 229   2      
+ 230   2              }
+ 231   1              return(X);  
+ 232   1      }
+ 233          
+ 234          int  GUI_TOUCH_X_MeasureY(void) {
+ 235   1              unsigned char t=0,t1,count=0;
+ 236   1              unsigned short int databuffer[10]={5,7,9,3,2,6,4,0,3,1};//Êý¾Ý×é
+ 237   1              unsigned short temp=0,Y=0;      
+ 238   1       
+ 239   1          while(count<10)     //Ñ­»·¶ÁÊý10´Î
+C51 COMPILER V7.06   TOUCH                                                                 12/02/2010 09:23:13 PAGE 5   
+
+ 240   1              {                 
+ 241   2                      databuffer[count]= Read_ADS7846_y();
+ 242   2                      count++;  
+ 243   2              }  
+ 244   1              if(count==10)//Ò»¶¨Òª¶Áµ½10´ÎÊý¾Ý,·ñÔò¶ªÆú
+ 245   1              {  
+ 246   2                  do//½«Êý¾ÝXÉýÐòÅÅÁÐ
+ 247   2                      {       
+ 248   3                              t1=0;             
+ 249   3                              for(t=0;t<count-1;t++)
+ 250   3                              {
+ 251   4                                      if(databuffer[t]>databuffer[t+1])//ÉýÐòÅÅÁÐ
+ 252   4                                      {
+ 253   5                                              temp=databuffer[t+1];
+ 254   5                                              databuffer[t+1]=databuffer[t];
+ 255   5                                              databuffer[t]=temp;
+ 256   5                                              t1=1; 
+ 257   5                                      }  
+ 258   4                              }
+ 259   3                      }while(t1);                                               
+ 260   2                      Y=(databuffer[3]+databuffer[4]+databuffer[5])/3;          
+ 261   2         
+ 262   2              }
+ 263   1              return(Y); 
+ 264   1      }
+ 265          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1504    ----
+   CONSTANT SIZE    =     40    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      90
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       3
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

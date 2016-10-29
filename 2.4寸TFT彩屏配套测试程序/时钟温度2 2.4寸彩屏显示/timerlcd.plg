@@ -1,0 +1,22 @@
+<html>
+<body>
+<pre>
+<h1>礦ision2 Build Log</h1>
+<h2>Project:</h2>
+L:\专业学习视频\单片机\LY-51S 开发板配套资料\2.4寸TFT彩屏配套测试程序\时钟温度2 2.4寸彩屏显示\timerlcd.uv2
+Project File Date:  12/09/2011
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BAR?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDSHOW_UCHARNUMBER?9325TP
+Program Size: data=117.1 xdata=0 code=7392
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 2 Warning(s).

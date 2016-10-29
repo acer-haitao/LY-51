@@ -1,0 +1,33 @@
+<html>
+<body>
+<pre>
+<h1>礦ision2 Build Log</h1>
+<h2>Project:</h2>
+L:\专业学习视频\单片机\LY-51S 开发板配套资料\2.4寸TFT彩屏配套测试程序\2.4寸彩屏显示渐变颜色彩条\timerlcd.uv2
+Project File Date:  12/09/2011
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(40): warning C280: 'color': unreferenced local variable
+compiling 9325TP.C...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_CLR_SCREEN?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD_PUTSTRING?9325TP
+Program Size: data=99.0 xdata=0 code=5658
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(40): warning C280: 'color': unreferenced local variable
+compiling 9325TP.C...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_CLR_SCREEN?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD_PUTSTRING?9325TP
+Program Size: data=99.0 xdata=0 code=5658
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 3 Warning(s).

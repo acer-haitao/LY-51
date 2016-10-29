@@ -1,0 +1,210 @@
+C51 COMPILER V7.06   MAIN                                                                  06/30/2010 15:57:03 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          /*-----------------------------------------------
+   2            Ãû³Æ£ºLCD1602ÏÔÊ¾ÊµÊ±Ê±ÖÓ
+   3            ¹«Ë¾£ºÉÏº£ºÆëàµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
+   4            ÍøÕ¾£ºwww.doflye.cn
+   5            ±àÐ´£ºÊ¦·Ã
+   6            ÈÕÆÚ£º2009.5
+   7            ÐÞ¸Ä£ºÎÞ
+   8            ÄÚÈÝ£ºÍ¨¹ý¶ÁÈ¡ds1302ÐÅÏ¢Ö±½ÓÏÔÊ¾µ½Òº¾§ÆÁÉÏ¡£ÓÐ±¸ÓÃµç³Ø£¬¶ÏµçºóÊ±¼äÈÔ¿ÉÒÔÕý³£ÔËÐÐ¡£Í¨¹ý´®¿Úµ÷ÊÔÈí¼þ¸üÐÂÊ±
+             -¼ä¡£¸üÐÂ·½Ê½ÈçÏÂ
+   9                  ÔÚ·¢ËÍÀ¸ÌîÐ´Ê±¼äÐÅÏ¢£¬¸ñÊ½ÈçÏÂ 2009071210102005 ±íÊ¾2009Äê7ÔÂ12ÈÕ 10µã10·Ö20Ãë ÐÇÆÚÎå£¬È»ºóÍ¨¹ý´®¿
+             -Ú·¢ËÍ£¬Ó²¼þÁ¬½Ó·½Ê½ºÍ
+  10                          ´®¿ÚÍ¨ÐÅÏàÍ¬¡£×¢ÒâÖÐ¼ä²»ÄÜÓÐ¿Õ¸ñ
+  11            -----------------------------------------------*/
+  12          #include<reg52.h>
+  13          #include"ds1302.h"
+  14          #include"9325tp.h"
+  15          #include "18b20.h"
+  16          /*-----------------------------------------------
+  17                            È«¾Ö±äÁ¿
+  18          -----------------------------------------------*/
+  19          #define TOP    10
+  20          #define BOTTOM 10
+  21          #define LEFT   15
+  22          #define RIGHT  10
+  23          #define DISTANCE  20
+  24          
+  25          #define CCOLOR 0xffff
+  26          
+  27          #define BCOLOR 0x0000
+  28          
+  29          unsigned int temp; //ÎÂ¶ÈÁÙÊ±±äÁ¿
+  30          unsigned char TempH,TempL;
+  31          bit SetFlag;       //¸üÐÂÊ±¼ä±êÖ¾Î»
+  32          unsigned char   time_buf2[16];
+  33          unsigned char timeold;
+  34          /*-----------------------------------------------
+  35                            º¯ÊýÉùÃ÷
+  36          -----------------------------------------------*/
+  37          void disp(void);
+  38          /*------------------------------------------------
+  39                        ´®¿ÚÍ¨Ñ¶³õÊ¼»¯
+  40          ------------------------------------------------*/
+  41          void UART_Init(void)
+  42          {
+  43   1          SCON  = 0x50;                       // SCON: Ä£Ê½ 1, 8-bit UART, Ê¹ÄÜ½ÓÊÕ  
+  44   1          TMOD |= 0x20;               // TMOD: timer 1, mode 2, 8-bit ÖØ×°
+  45   1          TH1   = 0xFD;               // TH1:  ÖØ×°Öµ 9600 ²¨ÌØÂÊ ¾§Õñ 11.0592MHz  
+  46   1          TR1   = 1;                  // TR1:  timer 1 ´ò¿ª                         
+  47   1          EA    = 1;                  //´ò¿ª×ÜÖÐ¶Ï
+  48   1          ES    = 1;                  //´ò¿ª´®¿ÚÖÐ¶Ï
+  49   1      }
+  50          
+  51          /*------------------------------------------------
+  52                                Ö÷º¯Êý
+  53          ------------------------------------------------*/
+C51 COMPILER V7.06   MAIN                                                                  06/30/2010 15:57:03 PAGE 2   
+
+  54          main()
+  55          {
+  56   1        unsigned char i;
+  57   1      
+  58   1             UART_Init();
+  59   1                 
+  60   1             Ds1302_Init(); /*DS302³õÊ¼»¯º¯Êý*/
+  61   1             ILI9325_Initial(); //³õÊ¼»¯LCD
+  62   1             CLR_Screen(BCOLOR); //ÓÃ±³¾°É«ÇåÆÁ
+  63   1             //»­¾ØÐÎ¿ò
+  64   1                 Rectangle(LEFT,TOP,LEFT+100,TOP+140,CCOLOR);
+  65   1                 Rectangle(LEFT+1,TOP+1,LEFT+99,TOP+139,CCOLOR);
+  66   1      
+  67   1                 LCD_PutString(LEFT+10,TOP+10,"µ±Ç°ÈÕÆÚ£º",CCOLOR,BCOLOR);
+  68   1             LCD_PutString(LEFT+10,DISTANCE*2+TOP+10,"µ±Ç°Ê±¼ä£º",CCOLOR,BCOLOR);
+  69   1                 LCD_PutString(LEFT+10,DISTANCE*4+TOP+10,"ÐÇÆÚ",CCOLOR,BCOLOR);
+  70   1                 LCD_PutString(LEFT+10,DISTANCE*5+TOP+12,"ÎÂ¶È£º   ¡æ",CCOLOR,BCOLOR);
+  71   1             //»­ÖÐ¼ä¼ä¸ôÏß
+  72   1                 Line(LEFT,TOP+DISTANCE+8,LEFT+100,TOP+DISTANCE+8,CCOLOR);
+  73   1             Line(LEFT,TOP+DISTANCE*2+8,LEFT+100,TOP+DISTANCE*2+8,CCOLOR);
+  74   1                 Line(LEFT,TOP+DISTANCE*3+8,LEFT+100,TOP+DISTANCE*3+8,CCOLOR);
+  75   1                 Line(LEFT,TOP+DISTANCE*4+8,LEFT+100,TOP+DISTANCE*4+8,CCOLOR);
+  76   1                 Line(LEFT,TOP+DISTANCE*5+8,LEFT+100,TOP+DISTANCE*5+8,CCOLOR);
+  77   1        while(1)
+  78   1             {
+  79   2                  timeold=time_buf1[6]; // ÓÃÓÚ¼ì²éÊ±ÖÓÊÇ·ñ¸Ä±ä
+  80   2                  Ds1302_Read_Time();//¶ÁÈ¡Ê±ÖÓÐÅÏ¢
+  81   2      
+  82   2                      if(timeold!=time_buf1[6])
+  83   2                       {
+  84   3               temp=ReadTemperature();//¶ÁÈ¡ÎÂ¶È
+  85   3                       TempH=temp>>4;
+  86   3               TempL=temp&0x0F;
+  87   3               TempL=TempL*6/10;//Ð¡Êý½üËÆ´¦Àí
+  88   3               disp();         //Òº¾§ÏÔÊ¾Ê±¼äÐÅÏ¢
+  89   3               }
+  90   2                         if(SetFlag)     //Èç¹û½ÓÊÕµ½´®¿ÚÐÅÏ¢Ôò¸üÐÂÊ±ÖÓ
+  91   2                           {
+  92   3                               for(i=0;i<8;i++)
+  93   3                               {
+  94   4                               time_buf1[i]=time_buf2[2*i]*10+time_buf2[2*i+1];//Êý¾ÝÕûºÏ£¬Èç2¸öÊý 1ºÍ5ÕûºÏ³É15
+  95   4                               }
+  96   3                               Ds1302_Write_Time();
+  97   3                               SetFlag=0;     //Ê±ÖÓÐÅÏ¢¸üÐÂºó±êÖ¾Î»ÇåÁã
+  98   3                               }
+  99   2                   }
+ 100   1       
+ 101   1        }
+ 102          
+ 103          /*------------------------------------------------
+ 104                            ´®¿ÚÖÐ¶Ï³ÌÐò
+ 105          ------------------------------------------------*/
+ 106          void UART_SER (void) interrupt 4 //´®ÐÐÖÐ¶Ï·þÎñ³ÌÐò
+ 107          {
+ 108   1          unsigned char Temp;          //¶¨ÒåÁÙÊ±±äÁ¿ 
+ 109   1          unsigned char i;
+ 110   1          if(RI)                        //ÅÐ¶ÏÊÇ½ÓÊÕÖÐ¶Ï²úÉú
+ 111   1           {
+ 112   2                RI=0;                      //±êÖ¾Î»ÇåÁã
+ 113   2                Temp=SBUF;                 //¶ÁÈë»º³åÇøµÄÖµ
+ 114   2                time_buf2[i]=Temp&0x0F;
+ 115   2                i++;
+C51 COMPILER V7.06   MAIN                                                                  06/30/2010 15:57:03 PAGE 3   
+
+ 116   2                if(i==16)                  //Á¬Ðø½ÓÊÕ16¸ö×Ö·ûÐÅÏ¢
+ 117   2                 {
+ 118   3                  i=0;
+ 119   3                      SetFlag=1;               //½ÓÊÕÍê³É±êÖ¾Î»ÖÃ1
+ 120   3                 }
+ 121   2            SBUF=Temp; //°Ñ½ÓÊÕµ½µÄÖµÔÙ·¢»ØµçÄÔ¶Ë
+ 122   2               }
+ 123   1         if(TI)  //Èç¹ûÊÇ·¢ËÍ±êÖ¾Î»£¬ÇåÁã
+ 124   1           TI=0;
+ 125   1      } 
+ 126          
+ 127          /*------------------------------------------------
+ 128                       ÏÔÊ¾´¦Àíº¯Êý
+ 129          ------------------------------------------------*/
+ 130          void disp(void)
+ 131          
+ 132          {
+ 133   1       
+ 134   1       unsigned char  TempData[10];
+ 135   1      
+ 136   1       TempData[0]='2';
+ 137   1       TempData[1]='0';
+ 138   1       TempData[2]='0'+time_buf1[1]/10;
+ 139   1       TempData[3]='0'+time_buf1[1]%10;
+ 140   1       TempData[4]='-';
+ 141   1       TempData[5]='0'+time_buf1[2]/10;
+ 142   1       TempData[6]='0'+time_buf1[2]%10;
+ 143   1       TempData[7]='-';
+ 144   1       TempData[8]='0'+time_buf1[3]/10;
+ 145   1       TempData[9]='0'+time_buf1[3]%10;
+ 146   1      
+ 147   1       LCD_PutString(LEFT+10,DISTANCE+TOP+10,TempData,CCOLOR,BCOLOR);
+ 148   1      
+ 149   1      
+ 150   1       
+ 151   1       TempData[0]='0'+time_buf1[4]/10;
+ 152   1       TempData[1]='0'+time_buf1[4]%10;
+ 153   1       TempData[2]=':';
+ 154   1       TempData[3]='0'+time_buf1[5]/10;
+ 155   1       TempData[4]='0'+time_buf1[5]%10;
+ 156   1       TempData[5]=':';
+ 157   1       TempData[6]='0'+time_buf1[6]/10;
+ 158   1       TempData[7]='0'+time_buf1[6]%10;
+ 159   1       TempData[8]=' ';
+ 160   1       TempData[9]=' ';
+ 161   1      
+ 162   1      LCD_PutString(LEFT+10,DISTANCE*3+TOP+10,TempData,CCOLOR,BCOLOR);
+ 163   1      
+ 164   1      switch(time_buf1[7])
+ 165   1      {
+ 166   2       case 1:LCD_PutString(LEFT+42,DISTANCE*4+TOP+10,"Ò»",CCOLOR,BCOLOR);break;
+ 167   2       case 2:LCD_PutString(LEFT+42,DISTANCE*4+TOP+10,"¶þ",CCOLOR,BCOLOR);break;
+ 168   2       case 3:LCD_PutString(LEFT+42,DISTANCE*4+TOP+10,"Èý",CCOLOR,BCOLOR);break;
+ 169   2       case 4:LCD_PutString(LEFT+42,DISTANCE*4+TOP+10,"ËÄ",CCOLOR,BCOLOR);break;
+ 170   2       case 5:LCD_PutString(LEFT+42,DISTANCE*4+TOP+10,"Îå",CCOLOR,BCOLOR);break;
+ 171   2       case 6:LCD_PutString(LEFT+42,DISTANCE*4+TOP+10,"Áù",CCOLOR,BCOLOR);break;
+ 172   2       case 7:LCD_PutString(LEFT+42,DISTANCE*4+TOP+10,"ÈÕ",CCOLOR,BCOLOR);break;
+ 173   2       default:break;
+ 174   2      }
+ 175   1      
+ 176   1       TempData[8]='0'+(TempH%100)/10;
+ 177   1       TempData[9]='0'+(TempH%100)%10; //ÕâÀïÖ»Ê¹ÓÃ2Î»ÕûÊý²¿·Ö
+C51 COMPILER V7.06   MAIN                                                                  06/30/2010 15:57:03 PAGE 4   
+
+ 178   1      LCD_PutString(LEFT+58,DISTANCE*5+TOP+12,&TempData[8],CCOLOR,BCOLOR);
+ 179   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    796    ----
+   CONSTANT SIZE    =     60    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     21      11
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

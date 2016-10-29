@@ -1,0 +1,21 @@
+<html>
+<body>
+<pre>
+<h1>µVision2 Build Log</h1>
+<h2>Project:</h2>
+F:\software\≤ ∆¡œ‡πÿ\2.4¥ÁTFT≤ ∆¡≈‰Ã◊≤‚ ‘≥Ã–Ú\2.4¥Á≤ ∆¡œ‘ æΩ•±‰—’…´≤ Ãı\timerlcd.uv2
+Project File Date:  07/11/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(40): warning C280: 'color': unreferenced local variable
+compiling 9325TP.C...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_CLR_SCREEN?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD_PUTSTRING?9325TP
+Program Size: data=99.0 xdata=0 code=5658
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 3 Warning(s).

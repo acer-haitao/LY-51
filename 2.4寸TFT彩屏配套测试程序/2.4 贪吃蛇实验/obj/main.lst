@@ -1,0 +1,49 @@
+C51 COMPILER V7.06   MAIN                                                                  07/12/2010 23:49:26 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND PRINT(.\obj\main.lst)
+
+stmt level    source
+
+   1          /**************************************************************************
+   2          
+   3          mini80 或者 mini80E 按键，上 s6，下 s14，左 s11， 右 s9， s4 重新开始
+   4          
+   5          可以按照自己需要重新定义键盘扫描程序中的值，在key_sweep.h 中
+   6          
+   7          
+   8          ****************************************************************************/
+   9          
+  10          #include "reg52.h"
+  11          #include "KEY_SWEEP.H" 
+  12          #include "SNAKE.h"
+  13          #include "9325tp.h"
+  14          
+  15          
+  16          //=========================================主程序========================================//
+  17          main()
+  18          {
+  19   1           ILI9325_Initial();
+  20   1              Init_SNAKE();
+  21   1              while(1)
+  22   1              {
+  23   2              Run_SNAKE();
+  24   2              Key();
+  25   2              }
+  26   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     14    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

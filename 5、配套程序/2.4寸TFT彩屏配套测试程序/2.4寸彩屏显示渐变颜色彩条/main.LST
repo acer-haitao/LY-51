@@ -1,0 +1,145 @@
+C51 COMPILER V7.06   MAIN                                                                  07/12/2010 23:37:30 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          /*-----------------------------------------------
+   2            名称：彩屏显示汉字
+   3            论坛：www.doflye.net
+   4            编写：shifang
+   5            日期：2009.5
+   6            修改：无
+   7            内容：
+   8            -----------------------------------------------*/
+   9          #include<reg52.h>
+  10          #include"9325tp.h"
+  11          
+  12          /*-----------------------------------------------
+  13                            全局变量
+  14          -----------------------------------------------*/
+  15          #define TOP    10
+  16          #define BOTTOM 10
+  17          #define LEFT   15
+  18          #define RIGHT  10
+  19          #define DISTANCE  20
+  20          
+  21          /* LCD color */
+  22          #define White          0xFFFF
+  23          #define Black          0x0000
+  24          #define Blue           0x001F
+  25          #define Blue2          0x051F
+  26          #define Red            0xF800
+  27          #define Magenta        0xF81F
+  28          #define Green          0x07E0
+  29          #define Cyan           0x7FFF
+  30          #define Yellow         0xFFE0
+  31          
+  32          
+  33          
+  34          
+  35          /*------------------------------------------------
+  36                                主函数
+  37          ------------------------------------------------*/
+  38          main()
+  39          { 
+  40   1        unsigned int color;
+  41   1        unsigned  int x,y;
+  42   1        ILI9325_Initial(); //初始化LCD
+  43   1      
+  44   1      
+  45   1      //蓝颜色32种值，每行一种颜色
+  46   1       for (y=0;y<32;y++)
+  47   1              {       
+  48   2                 for (x=0;x<240;x++)
+  49   2                     {
+  50   3                     Show_RGB(x,x,y,y,y);
+  51   3                  }
+  52   2              }
+  53   1       //绿颜色64种值，每行一种颜色
+  54   1       for (y=32;y<96;y++)
+  55   1              {       
+C51 COMPILER V7.06   MAIN                                                                  07/12/2010 23:37:30 PAGE 2   
+
+  56   2                 for (x=0;x<240;x++)
+  57   2                     {
+  58   3                     Show_RGB(x,x,y,y,(y-32)<<5);
+  59   3                  }
+  60   2              }
+  61   1       //红颜色32种值，每行一种颜色
+  62   1       for (y=96;y<128;y++)
+  63   1              {       
+  64   2                 for (x=0;x<240;x++)
+  65   2                     {
+  66   3                     Show_RGB(x,x,y,y,(y-96)<<11);
+  67   3                  }
+  68   2              }
+  69   1       //红蓝综合颜色32种值，每行一种颜色
+  70   1       for (y=128;y<160;y++)
+  71   1              {       
+  72   2                 for (x=0;x<240;x++)
+  73   2                     {
+  74   3                     Show_RGB(x,x,y,y,((y-128)<<11 | (y-128)));
+  75   3                  }
+  76   2              }
+  77   1       //红绿综合颜色32种值，每行一种颜色
+  78   1        for (y=160;y<192;y++)
+  79   1              {       
+  80   2                 for (x=0;x<240;x++)
+  81   2                     {
+  82   3                     Show_RGB(x,x,y,y,((y-160)<<11 | (y-160)<<5));
+  83   3                  }
+  84   2              }
+  85   1       //绿蓝综合颜色32种值，每行一种颜色
+  86   1        for (y=192;y<224;y++)
+  87   1              {       
+  88   2                 for (x=0;x<240;x++)
+  89   2                     {
+  90   3                     Show_RGB(x,x,y,y,((y-192)<<5 | (y-192)));
+  91   3                  }
+  92   2              }
+  93   1       //红绿蓝综合颜色32种值，每行一种颜色
+  94   1        for (y=224;y<256;y++)
+  95   1              {       
+  96   2                 for (x=0;x<240;x++)
+  97   2                     {
+  98   3                     Show_RGB(x,x,y,y,((y-224)<<11 | (y-224)<<5 | (y-224)));
+  99   3                  }
+ 100   2              }
+ 101   1        //绿颜色64种值，每行一种颜色
+ 102   1        for (y=256;y<320;y++)
+ 103   1              {       
+ 104   2                 for (x=0;x<240;x++)
+ 105   2                     {
+ 106   3                     Show_RGB(x,x,y,y,(y-256)<<5);
+ 107   3                  }
+ 108   2              }
+ 109   1        while(1)
+ 110   1             {
+ 111   2                 
+ 112   2                 }
+ 113   1       
+ 114   1        }
+*** WARNING C280 IN LINE 40 OF MAIN.C: 'color': unreferenced local variable
+ 115          
+ 116          
+C51 COMPILER V7.06   MAIN                                                                  07/12/2010 23:37:30 PAGE 3   
+
+ 117          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    744    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

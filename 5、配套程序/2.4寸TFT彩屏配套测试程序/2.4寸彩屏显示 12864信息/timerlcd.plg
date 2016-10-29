@@ -1,0 +1,16 @@
+<html>
+<body>
+<pre>
+<h1>µVision2 Build Log</h1>
+<h2>Project:</h2>
+F:\software\≤ ∆¡œ‡πÿ\2.4¥ÁTFT≤ ∆¡≈‰Ã◊≤‚ ‘≥Ã–Ú\2.4¥Á≤ ∆¡œ‘ æ 12864–≈œ¢\timerlcd.uv2
+Project File Date:  07/11/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+compiling 9325TP.C...
+linking...
+Program Size: data=54.0 xdata=0 code=5345
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 0 Warning(s).

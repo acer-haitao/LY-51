@@ -1,0 +1,9 @@
+BANK0 {"Task0.obj"},
+BANK1 {"Task1.obj"},
+BANK2 {"Task2.obj"},
+BANK3 {"Task3.obj"},
+COMMON {"startup.obj"},
+COMMON {"l51_bank.obj"},
+COMMON {"Conf_tny.obj"} 
+TO "Banking" BankArea(0x8000,0xFFFF) Rtx51Tiny 
+RAMSIZE(256) 

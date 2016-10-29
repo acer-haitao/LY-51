@@ -1,0 +1,604 @@
+C51 COMPILER V7.06   ILI9163                                                               02/03/2010 15:50:23 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE ILI9163
+OBJECT MODULE PLACED IN .\obj\ILI9163.obj
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE ILI9163.c BROWSE DEBUG OBJECTEXTEND PRINT(.\obj\ILI9163.lst) OBJECT(.\obj\I
+                    -LI9163.obj)
+
+stmt level    source
+
+   1          
+   2          #include "reg52.h"
+   3          #include "stdio.h"
+   4          
+   5          #define uchar unsigned char
+   6          //==============================================================//
+   7          sbit CS =P2^2;
+   8          sbit RS =P2^4;
+   9          sbit Rw =P2^5;
+  10          sbit Rd =P2^6;
+  11          sbit RST=P2^1;
+  12          
+  13          sbit PAUSE=P1^4;
+  14          
+  15          //=====================================================================//
+  16          void Delayms(int) ;//廷时子程序
+  17          void WriteDAT(unsigned char a,unsigned char b);
+  18          void WriteCOM(unsigned char b);
+  19          void WriteDAT1(unsigned char b);
+  20          void Ini_ILI9163(void);
+  21          unsigned char code pic[];
+  22          void show_photo(void);
+  23          void  pause(void);
+  24          void SleepOut(void);
+  25          void SleepIn(void);
+  26          void display_hb(void);
+  27          //=======================延时程序========================//
+  28          void Delayms(int count)  //  x 10ms 
+  29          {
+  30   1              int i,j;
+  31   1              for(i=0;i<count;i++)
+  32   1                      for(j=0;j<500;j++);
+  33   1      }
+  34          
+  35          //======================== 按键测试 ======================//
+  36          
+  37          void  pause()
+  38          {
+  39   1      while(PAUSE);
+  40   1      }
+  41          
+  42          //=========================写寄存器ID的子程序===========================//
+  43          void WriteCOM(unsigned char b)
+  44          {
+  45   1        RS=0;
+  46   1        CS=0;
+  47   1        Rd=1;
+  48   1       
+  49   1        P0=0x00;
+  50   1         Rw=0;
+  51   1        Rw=1;
+  52   1        P0=b;
+  53   1        Rw=0;
+  54   1        Rw=1;
+C51 COMPILER V7.06   ILI9163                                                               02/03/2010 15:50:23 PAGE 2   
+
+  55   1        RS=1;
+  56   1        CS=1;
+  57   1       }
+  58          //==========================写数据的子程序==============================//
+  59          void WriteDAT(unsigned char a,unsigned char b)
+  60          {
+  61   1         RS=1; 
+  62   1         CS=0; 
+  63   1         Rd=1;
+  64   1      
+  65   1         P0=a;
+  66   1         Rw=0;
+  67   1         Rw=1;
+  68   1      
+  69   1         P0=b;
+  70   1         Rw=0;
+  71   1         Rw=1;  
+  72   1       
+  73   1         RS=0;
+  74   1         CS=1;
+  75   1      
+  76   1      }
+  77          
+  78          void WriteDAT1(unsigned char b)
+  79          {
+  80   1         RS=1; 
+  81   1         CS=0; 
+  82   1         Rd=1;
+  83   1         
+  84   1      
+  85   1         P0=b;
+  86   1         Rw=0;
+  87   1         Rw=1; 
+  88   1      
+  89   1         RS=0;
+  90   1         CS=1;
+  91   1      }
+  92          void  Write_Data_U16(unsigned int y)
+  93          {
+  94   1              unsigned char m,n;
+  95   1              m=y>>8;
+  96   1              n=y;
+  97   1              WriteDAT(m,n);
+  98   1      
+  99   1      }
+ 100          //=========================== IC ILI9163初始化=======================================//
+ 101          
+ 102          void Ini_ILI9163(void)
+ 103            {     
+ 104   1        CS=1;
+ 105   1        Delayms(10);
+ 106   1        RST=0;
+ 107   1        Delayms(10);
+ 108   1        RST=1;
+ 109   1        Delayms(10);
+ 110   1        WriteCOM(0x11);//退出睡眠模式
+ 111   1        Delayms(10); 
+ 112   1        WriteCOM(0x26); // Gammut format 伽马曲线设置
+ 113   1        WriteDAT1(0x04);//  04h GC3 Gammut 2.2
+ 114   1                      //  01h GC1  Gammut  1.0 , 02h  GC2  gammut 1.8, 08h  GC3 Gammut 2.5
+ 115   1        Delayms(10);
+ 116   1        WriteCOM(0xB1);     //帧频控制    
+C51 COMPILER V7.06   ILI9163                                                               02/03/2010 15:50:23 PAGE 3   
+
+ 117   1        WriteDAT1(0x08);   
+ 118   1        WriteDAT1(0x09);        // 75hz
+ 119   1      
+ 120   1      
+ 121   1        WriteCOM(0xC0);    //电源控制     
+ 122   1        WriteDAT1(0x04);   
+ 123   1        WriteDAT1(0x00);   
+ 124   1      
+ 125   1        WriteCOM(0xc1);    //电源控制 
+ 126   1        WriteDAT1(0x05);
+ 127   1      
+ 128   1        WriteCOM(0xC5);     //偏压控制     
+ 129   1        WriteDAT1(0x4c);   //vcom control  0x48,0x24  34  //2b
+ 130   1        WriteDAT1(0x38);   //vcom control  0x48,0x24  50  //47   
+ 131   1        Delayms(10);
+ 132   1      
+ 133   1        WriteCOM(0xC7);   //偏压控制       
+ 134   1        WriteDAT1(0x40); //C4 
+ 135   1      
+ 136   1        WriteCOM(0x3A);// Interface Pixel mode
+ 137   1        WriteDAT1(0x05);//  05 16 bit/Pixel  RGB 53-35  Twice per pixel for 80-8bits parallel
+ 138   1                       //  06 18 bit/Pixel  RGB 6-6-6  Three times per pixel for 80-8bits parallel
+ 139   1      
+ 140   1      
+ 141   1        WriteCOM(0x36); //扫描方向控制        
+ 142   1        WriteDAT1(0xC8);  //
+ 143   1      
+ 144   1       
+ 145   1        WriteCOM(0xB7);         
+ 146   1        WriteDAT1(0x00);  // 
+ 147   1      
+ 148   1        WriteCOM(0xF2);
+ 149   1        WriteDAT1(0x01);
+ 150   1        Delayms(10);
+ 151   1      
+ 152   1        // t Gamma
+ 153   1        WriteCOM(0xE0);// Positive  05
+ 154   1        WriteDAT1(0x3F);//1
+ 155   1        WriteDAT1(0x26);//2
+ 156   1        WriteDAT1(0x23);//3
+ 157   1        WriteDAT1(0x2D);//4
+ 158   1        WriteDAT1(0x28);//5
+ 159   1        WriteDAT1(0x0B);//6
+ 160   1        WriteDAT1(0x53);//7
+ 161   1        WriteDAT1(0xE1);//8
+ 162   1        WriteDAT1(0x41);//9
+ 163   1        WriteDAT1(0x17);//10
+ 164   1        WriteDAT1(0x1E);//11
+ 165   1        WriteDAT1(0x01);//12
+ 166   1        WriteDAT1(0x00);//13
+ 167   1        WriteDAT1(0x00);//14
+ 168   1        WriteDAT1(0x00);//15
+ 169   1      
+ 170   1        WriteCOM(0xE1); // Negative
+ 171   1        WriteDAT1(0x00);//1
+ 172   1        WriteDAT1(0x16);//2
+ 173   1        WriteDAT1(0x1a);//3
+ 174   1        WriteDAT1(0x0d);//4
+ 175   1        WriteDAT1(0x17);//5
+ 176   1        WriteDAT1(0x10);//6
+ 177   1        WriteDAT1(0x2a);//7
+ 178   1        WriteDAT1(0x18);//8
+C51 COMPILER V7.06   ILI9163                                                               02/03/2010 15:50:23 PAGE 4   
+
+ 179   1        WriteDAT1(0x3b);//9
+ 180   1        WriteDAT1(0x05);//10
+ 181   1        WriteDAT1(0x1e);//11
+ 182   1        WriteDAT1(0x39);//12
+ 183   1        WriteDAT1(0x3f);//13
+ 184   1        WriteDAT1(0x3f);//14
+ 185   1        WriteDAT1(0x3f);//15     //////
+ 186   1      
+ 187   1      
+ 188   1      
+ 189   1      
+ 190   1         WriteCOM(0x29);      //Display on
+ 191   1         WriteCOM(0x2C);      //Write Data to GRAM
+ 192   1      
+ 193   1         Delayms(10);
+ 194   1      
+ 195   1      
+ 196   1      }
+ 197          
+ 198          
+ 199          
+ 200          //=======================================写地址====================================//
+ 201          void addr(void)
+ 202          {
+ 203   1        WriteCOM(0x2A);      //Colulm addRSTs set
+ 204   1        WriteDAT1(0x00);
+ 205   1        WriteDAT1(0x00);
+ 206   1        WriteDAT1(0x00);
+ 207   1        WriteDAT1(127);
+ 208   1      
+ 209   1        WriteCOM(0x2B);      //Colulm addRSTs set
+ 210   1        WriteDAT1(0x00);
+ 211   1        WriteDAT1(0x00);
+ 212   1        WriteDAT1(0x00);
+ 213   1        WriteDAT1(159);
+ 214   1      
+ 215   1        WriteCOM(0x2C);      //Write Data to GRAM
+ 216   1       }
+ 217          static void LCD_SetPos(unsigned int x0,unsigned int x1,unsigned int y0,unsigned int y1)
+ 218          {
+ 219   1        WriteCOM(0x2A);      //Colulm addRSTs set
+ 220   1        WriteDAT1(x0>>8);
+ 221   1        WriteDAT1(x0);
+ 222   1      
+ 223   1        WriteDAT1(x1>>8);
+ 224   1        WriteDAT1(x1);
+ 225   1      
+ 226   1        WriteCOM(0x2B);      //Colulm addRSTs set
+ 227   1        WriteDAT1(y0>>8);
+ 228   1        WriteDAT1(y0);
+ 229   1      
+ 230   1        WriteDAT1(y1>>8);
+ 231   1        WriteDAT1(y1);
+ 232   1      
+ 233   1        WriteCOM(0x2C);      //Write Data to GRAM
+ 234   1      }
+ 235          
+ 236          /*-----------------------------------------------------------------
+ 237           * 函数名：Put_pixel
+ 238           * 功能：在屏幕上画点
+ 239           * 输入参数：坐标x,y
+ 240           *                      color颜色
+C51 COMPILER V7.06   ILI9163                                                               02/03/2010 15:50:23 PAGE 5   
+
+ 241           * 输出参数：无
+ 242           ----------------------------------------------------------------*/
+ 243          void Put_pixel(uchar x,uchar y,unsigned int color)
+ 244          {
+ 245   1              LCD_SetPos(x,x,y,y);
+ 246   1              Write_Data_U16(color);
+ 247   1      }
+ 248          /*-----------------------------------------------------------------
+ 249           * 函数名：Line
+ 250           * 功能：在屏幕上画线
+ 251           * 输入参数：起始坐标X0，Y0，终止坐标X1，Y1
+ 252           *                      color颜色
+ 253           * 输出参数：无
+ 254           ----------------------------------------------------------------*/
+ 255          void Line(      uchar X0,
+ 256                                  uchar Y0,
+ 257                                  uchar X1,
+ 258                                  uchar Y1,
+ 259                                  unsigned int color)
+ 260          {
+ 261   1              int dx = X1 - X0;
+ 262   1              int dy = Y1 - Y0;
+ 263   1              int P  = 2 * dy - dx;
+ 264   1              int dobDy = 2 * dy;
+ 265   1              int dobD = 2 * (dy - dx);
+ 266   1              int PointX = 0,PointY = 0;
+ 267   1              int incx = 0,incy = 0;
+ 268   1              int distance = 0,xerr = 0,yerr = 0;
+ 269   1              unsigned int i = 0;
+ 270   1      
+ 271   1              if(dx == 0)             //k=1斜率为1
+ 272   1              {
+ 273   2                      PointX = X0;
+ 274   2                      if(Y0 < Y1)
+ 275   2                      {
+ 276   3                              PointY = Y0;
+ 277   3                      }
+ 278   2                      else
+ 279   2                      {
+ 280   3                              PointY = Y1;
+ 281   3                      }
+ 282   2                      for(i = 0;i <= ((Y0<Y1) ? (Y1-Y0) : (Y0-Y1));i++)
+ 283   2                      {
+ 284   3      
+ 285   3                                      Put_pixel(PointX,PointY,color);
+ 286   3                              PointY++;
+ 287   3                      }
+ 288   2                      return;
+ 289   2              }
+ 290   1              if(dy == 0)             //k=0斜率为0
+ 291   1              {
+ 292   2                      PointY = Y0;
+ 293   2                      if(X0 < X1)
+ 294   2                      {
+ 295   3                              PointX = X0;
+ 296   3                      }
+ 297   2                      else
+ 298   2                      {
+ 299   3                              PointX = X1;
+ 300   3                      }
+ 301   2                      for(i = 0;i <= ((X0<X1) ? (X1-X0) : (X0-X1));i++)
+ 302   2                      {
+C51 COMPILER V7.06   ILI9163                                                               02/03/2010 15:50:23 PAGE 6   
+
+ 303   3      
+ 304   3                                      Put_pixel(PointX,PointY,color);
+ 305   3                              PointX++;
+ 306   3                      }
+ 307   2                      return;
+ 308   2              }
+ 309   1      
+ 310   1              if(dx > 0)
+ 311   1                      incx = 1;
+ 312   1              else if(dx == 0)
+ 313   1                      incx = 0;
+ 314   1              else
+ 315   1                      incx = -1;
+ 316   1      
+ 317   1              if(dy > 0)
+ 318   1                      incy = 1;
+ 319   1              else if(dy == 0)
+ 320   1                      incy = 0;
+ 321   1              else
+ 322   1                      incy = -1;
+ 323   1      
+ 324   1          dx = ((X0>X1) ? (X0-X1) : (X1-X0));
+ 325   1          dy = ((Y0>Y1) ? (Y0-Y1) : (Y1-Y0));
+ 326   1      
+ 327   1          if(dx>dy) distance=dx;
+ 328   1          else distance=dy;
+ 329   1      
+ 330   1          PointX = X0;
+ 331   1          PointY = Y0;
+ 332   1          for(i=0;i<=distance+1;i++)
+ 333   1          {
+ 334   2      
+ 335   2                      Put_pixel(PointX,PointY,color);
+ 336   2              xerr+=dx;
+ 337   2              yerr+=dy;
+ 338   2              if(xerr>distance)
+ 339   2              {
+ 340   3                  xerr-=distance;
+ 341   3                  PointX+=incx;
+ 342   3              }
+ 343   2              if(yerr>distance)
+ 344   2              {
+ 345   3                  yerr-=distance;
+ 346   3                  PointY+=incy;
+ 347   3              }
+ 348   2          }
+ 349   1      }
+ 350          /*----------------------------------------------------------------------------
+ 351           * 函数名：Rectangle
+ 352           * 功能：绘制一个矩形框
+ 353           * 输入：矩形的起始位置left,top 
+ 354           *               矩形的结束位置right,bottom 
+ 355           *               矩形框的颜色color
+ 356           * 输出：无
+ 357           -----------------------------------------------------------------------------*/
+ 358          void Rectangle( uchar left,
+ 359                                          uchar top,
+ 360                                          uchar right,
+ 361                                          uchar bottom,
+ 362                                          unsigned int color)
+ 363          {
+ 364   1              Line(left,top,right,top,color);
+C51 COMPILER V7.06   ILI9163                                                               02/03/2010 15:50:23 PAGE 7   
+
+ 365   1              Line(left,top,left,bottom,color);
+ 366   1              Line(right,top,right,bottom,color);
+ 367   1              Line(left,bottom,right,bottom,color);
+ 368   1      }
+ 369          /*----------------------------------------------------------------------------
+ 370           * 函数名：Bar
+ 371           * 功能：绘制一个填充的平面矩形
+ 372           * 输入：矩形的起始位置left,top 
+ 373           *               矩形的结束位置right,bottom 
+ 374           *               矩形颜色color
+ 375           * 输出：无
+ 376           -----------------------------------------------------------------------------*/
+ 377          void Bar(       uchar left,
+ 378                                  uchar top,
+ 379                                  uchar right,
+ 380                                  uchar bottom,
+ 381                                  unsigned int color)
+ 382          {
+ 383   1              uchar i = 0,k = 0;
+ 384   1              for(k = top;k < bottom;k++)
+ 385   1              {
+ 386   2                      for(i = left+1;i <= right;i++)
+ 387   2                      {
+ 388   3                       LCD_SetPos(i,i,k,k);
+ 389   3                Write_Data_U16(color);
+ 390   3                      }
+ 391   2              }
+ 392   1      }
+ 393          //=======================灰度===========================================//
+ 394          void grayscale(void)
+ 395          {
+ 396   1       unsigned char data c,s;
+ 397   1       addr();
+ 398   1         for(c=0;c<80;c++)//128/2个点=64
+ 399   1                   {
+ 400   2                      for(s=0;s<8;s++){WriteDAT(0xff,0xff);}
+ 401   2                      for(s=0;s<8;s++){WriteDAT(0xef,0x7d);}
+ 402   2                      for(s=0;s<8;s++){WriteDAT(0xd6,0x9a);}
+ 403   2                      for(s=0;s<8;s++){WriteDAT(0xc6,0x18);}
+ 404   2                      for(s=0;s<8;s++){WriteDAT(0xb5,0x96);}
+ 405   2                      for(s=0;s<8;s++){WriteDAT(0xa5,0x14);}
+ 406   2                      for(s=0;s<8;s++){WriteDAT(0x94,0x92);}
+ 407   2                      for(s=0;s<8;s++){WriteDAT(0x84,0x10);}
+ 408   2                      for(s=0;s<8;s++){WriteDAT(0x73,0x8e);}
+ 409   2                      for(s=0;s<8;s++){WriteDAT(0x63,0x0c);}
+ 410   2                      for(s=0;s<8;s++){WriteDAT(0x52,0x8a);}
+ 411   2                      for(s=0;s<8;s++){WriteDAT(0x42,0x08);}
+ 412   2                      for(s=0;s<8;s++){WriteDAT(0x31,0x86);}
+ 413   2                      for(s=0;s<8;s++){WriteDAT(0x21,0x04);}
+ 414   2                      for(s=0;s<8;s++){WriteDAT(0x10,0x82);}
+ 415   2                      for(s=0;s<8;s++){WriteDAT(0x00,0x00);}
+ 416   2                   }
+ 417   1            for(c=0;c<20;c++)
+ 418   1            {
+ 419   2                      for(s=0;s<64;s++){WriteDAT(0xff,0xff);}
+ 420   2                      for(s=0;s<64;s++){WriteDAT(0x00,0x00);}
+ 421   2             }
+ 422   1             for(c=0;c<40;c++)
+ 423   1            {
+ 424   2      
+ 425   2                      for(s=0;s<16;s++) {WriteDAT(0xff,0xff);}
+ 426   2                      for(s=0;s<32;s++) {WriteDAT(0xd6,0x9a);}
+C51 COMPILER V7.06   ILI9163                                                               02/03/2010 15:50:23 PAGE 8   
+
+ 427   2                      for(s=0;s<16;s++) {WriteDAT(0xff,0xff);}
+ 428   2                      for(s=0;s<16;s++) {WriteDAT(0x00,0x00);}
+ 429   2                      for(s=0;s<32;s++) {WriteDAT(0x21,0x04);}
+ 430   2                      for(s=0;s<16;s++) {WriteDAT(0x00,0x00);}
+ 431   2            }
+ 432   1             for(c=0;c<20;c++)
+ 433   1            {
+ 434   2                      for(s=0;s<64;s++){WriteDAT(0xff,0xff);}
+ 435   2                      for(s=0;s<64;s++){WriteDAT(0x00,0x00);}
+ 436   2             }
+ 437   1             Delayms(200);//廷时大约2S
+ 438   1      
+ 439   1      }
+ 440          
+ 441          //======================================显示===================================//
+ 442          void displayshow(void)
+ 443          {
+ 444   1        unsigned char data i,c,s;
+ 445   1        addr();
+ 446   1      
+ 447   1        for(i=0;i<80;i++)
+ 448   1        {
+ 449   2        for(c=0;c<1;c++)
+ 450   2        {
+ 451   3        for(s=0;s<64;s++) {WriteDAT(0x00,0x00); WriteDAT(0xff,0xff);}
+ 452   3         }
+ 453   2        for(c=0;c<1;c++)
+ 454   2        {
+ 455   3        for(s=0;s<64;s++) {WriteDAT(0xff,0xff);WriteDAT(0x00,0x00);}
+ 456   3         }
+ 457   2         }
+ 458   1      Delayms(200);//廷时大约2S
+ 459   1      }
+ 460          
+ 461          void CLR_Screen(unsigned int color)
+ 462          {
+ 463   1       unsigned int c,s;
+ 464   1       addr();
+ 465   1             
+ 466   1       for(c=0;c<160;c++)
+ 467   1              {
+ 468   2           for(s=0;s<128;s++)
+ 469   2                   {
+ 470   3                    Write_Data_U16(color);
+ 471   3                   }
+ 472   2              }
+ 473   1        
+ 474   1      }
+ 475          
+ 476          
+ 477          /////////////////////////////////////////////////////////////
+ 478          #include "8X16.h"
+ 479          void LCD_PutChar8x16(unsigned short x, unsigned short y, char c, unsigned int fColor, unsigned int bColor)
+ 480          {
+ 481   1       unsigned int i,j;
+ 482   1       LCD_SetPos(x,x+8-1,y,y+16-1);
+ 483   1       for(i=0; i<16;i++) {
+ 484   2                      unsigned char m=Font8x16[c*16+i];
+ 485   2                      for(j=0;j<8;j++) {
+ 486   3                              if((m&0x80)==0x80) {
+ 487   4                                      Write_Data_U16(fColor);
+ 488   4                                      }
+C51 COMPILER V7.06   ILI9163                                                               02/03/2010 15:50:23 PAGE 9   
+
+ 489   3                              else {
+ 490   4                                      Write_Data_U16(bColor);
+ 491   4                                      }
+ 492   3                              m<<=1;
+ 493   3                              }
+ 494   2                      }
+ 495   1      }
+ 496          
+ 497          
+ 498          void LCD_PutChar(unsigned short x, unsigned short y, char c, unsigned int fColor, unsigned int bColor) {
+ 499   1      
+ 500   1                      LCD_PutChar8x16( x, y, c, fColor, bColor );
+ 501   1              }
+ 502          
+ 503          //=================================================
+ 504          //函数名称： LCDShow_uCharNumber(();
+ 505          //入口参数：uCharNumber
+ 506          //返  回值：无
+ 507          //说    明：向LCD发送一个0--255的数值
+ 508          //=================================================
+ 509          void LCDShow_uCharNumber(       uchar x,
+ 510                                                                  uchar y,
+ 511                                                                  uchar uCharNumber,
+ 512                                                                  unsigned int forecolor,
+ 513                                                                  unsigned int bkcolor)
+ 514          {
+ 515   1              LCD_PutChar(x,y,uCharNumber/100+'0',forecolor,bkcolor);
+ 516   1              LCD_PutChar(x+8,y,uCharNumber/10%10+'0',forecolor,bkcolor);
+ 517   1              LCD_PutChar(x+16,y,uCharNumber%10+'0',forecolor,bkcolor);
+ 518   1      }
+ 519          
+ 520          #include "GB1616.h"     //16*16汉字字模
+ 521          
+ 522          void PutGB1616(unsigned short x, unsigned short  y, unsigned char c[2], unsigned int fColor,unsigned int b
+             -Color){
+ 523   1              unsigned int i,j,k;
+ 524   1      
+ 525   1              LCD_SetPos(x,  x+16-1,y, y+16-1);
+ 526   1      
+ 527   1              for (k=0;k<64;k++) { //64标示自建汉字库中的个数，循环查询内码
+ 528   2                if ((codeGB_16[k].Index[0]==c[0])&&(codeGB_16[k].Index[1]==c[1])){ 
+ 529   3              for(i=0;i<32;i++) {
+ 530   4                        unsigned short m=codeGB_16[k].Msk[i];
+ 531   4                        for(j=0;j<8;j++) {
+ 532   5                              if((m&0x80)==0x80) {
+ 533   6                                      Write_Data_U16(fColor);
+ 534   6                                      }
+ 535   5                              else {
+ 536   6                                      Write_Data_U16(bColor);
+ 537   6                                      }
+ 538   5                              m<<=1;
+ 539   5                              } 
+ 540   4                        }
+ 541   3                      }  
+ 542   2                }     
+ 543   1              }
+ 544          
+ 545          void LCD_PutString(unsigned short x, unsigned short y, unsigned char *s, unsigned int fColor, unsigned int
+             - bColor) {
+ 546   1               unsigned char l=0;
+ 547   1              while(*s) {
+ 548   2                      if( *s < 0x80) 
+C51 COMPILER V7.06   ILI9163                                                               02/03/2010 15:50:23 PAGE 10  
+
+ 549   2                          {
+ 550   3                              LCD_PutChar(x+l*8,y,*s,fColor,bColor);
+ 551   3                              s++;l++;
+ 552   3                              }
+ 553   2                      else
+ 554   2                          {
+ 555   3                              PutGB1616(x+l*8,y,(unsigned char*)s,fColor,bColor);
+ 556   3                              s+=2;l+=2;
+ 557   3                              }
+ 558   2                      }
+ 559   1              }
+ 560          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2318    ----
+   CONSTANT SIZE    =   2993    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----     110
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

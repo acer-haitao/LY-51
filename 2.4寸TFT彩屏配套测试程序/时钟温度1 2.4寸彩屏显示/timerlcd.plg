@@ -1,0 +1,405 @@
+<html>
+<body>
+<pre>
+<h1>µVision2 Build Log</h1>
+<h2>Project:</h2>
+F:\software\final software\mini80  ±÷”Œ¬∂» 2.4¥Á≤ ∆¡œ‘ æ\timerlcd.uv2
+Project File Date:  05/11/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+compiling DS1302.c...
+compiling ILI9163.c...
+linking...
+Program Size: data=80.1 xdata=16 code=6896
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+9325TP.H(23): error C141: syntax error near 'x', expected ')'
+9325TP.H(25): error C141: syntax error near 'X0', expected ')'
+9325TP.H(30): error C141: syntax error near 'left', expected ')'
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+9325TP.H(23): error C141: syntax error near 'x', expected ')'
+9325TP.H(25): error C141: syntax error near 'X0', expected ')'
+9325TP.H(30): error C141: syntax error near 'left', expected ')'
+9325TP.C(403): error C141: syntax error near 'x', expected ')'
+9325TP.C(405): error C202: 'x': undefined identifier
+9325TP.C(406): error C202: 'color': undefined identifier
+9325TP.C(435): error C141: syntax error near 'X0', expected ')'
+9325TP.C(441): error C202: 'X1': undefined identifier
+9325TP.C(442): error C202: 'Y1': undefined identifier
+9325TP.C(453): error C202: 'X0': undefined identifier
+9325TP.C(454): error C202: 'Y0': undefined identifier
+9325TP.C(456): error C202: 'Y0': undefined identifier
+9325TP.C(460): error C202: 'Y1': undefined identifier
+9325TP.C(462): error C202: 'Y0': undefined identifier
+9325TP.C(465): error C208: '_Put_pixel': too many actual parameters
+9325TP.C(472): error C202: 'Y0': undefined identifier
+9325TP.C(473): error C202: 'X0': undefined identifier
+9325TP.C(475): error C202: 'X0': undefined identifier
+9325TP.C(479): error C202: 'X1': undefined identifier
+9325TP.C(481): error C202: 'X0': undefined identifier
+9325TP.C(484): error C208: '_Put_pixel': too many actual parameters
+9325TP.C(504): error C202: 'X0': undefined identifier
+9325TP.C(505): error C202: 'Y0': undefined identifier
+9325TP.C(510): error C202: 'X0': undefined identifier
+9325TP.C(511): error C202: 'Y0': undefined identifier
+9325TP.C(515): error C208: '_Put_pixel': too many actual parameters
+9325TP.C(538): error C141: syntax error near 'left', expected ')'
+9325TP.C(544): error C202: 'left': undefined identifier
+9325TP.C(545): error C202: 'left': undefined identifier
+9325TP.C(546): error C202: 'right': undefined identifier
+9325TP.C(547): error C202: 'left': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling main.c...
+9325TP.H(31): error C141: syntax error near 'x', expected ')'
+9325TP.H(33): error C141: syntax error near 'X0', expected ')'
+9325TP.H(38): error C141: syntax error near 'left', expected ')'
+18b20.h(10): warning C317: attempt to redefine macro 'uint'
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+9325TP.H(31): error C141: syntax error near 'x', expected ')'
+9325TP.H(33): error C141: syntax error near 'X0', expected ')'
+9325TP.H(38): error C141: syntax error near 'left', expected ')'
+9325TP.C(403): error C141: syntax error near 'x', expected ')'
+9325TP.C(405): error C202: 'x': undefined identifier
+9325TP.C(406): error C202: 'color': undefined identifier
+9325TP.C(435): error C141: syntax error near 'X0', expected ')'
+9325TP.C(441): error C202: 'X1': undefined identifier
+9325TP.C(442): error C202: 'Y1': undefined identifier
+9325TP.C(453): error C202: 'X0': undefined identifier
+9325TP.C(454): error C202: 'Y0': undefined identifier
+9325TP.C(456): error C202: 'Y0': undefined identifier
+9325TP.C(460): error C202: 'Y1': undefined identifier
+9325TP.C(462): error C202: 'Y0': undefined identifier
+9325TP.C(465): error C208: '_Put_pixel': too many actual parameters
+9325TP.C(472): error C202: 'Y0': undefined identifier
+9325TP.C(473): error C202: 'X0': undefined identifier
+9325TP.C(475): error C202: 'X0': undefined identifier
+9325TP.C(479): error C202: 'X1': undefined identifier
+9325TP.C(481): error C202: 'X0': undefined identifier
+9325TP.C(484): error C208: '_Put_pixel': too many actual parameters
+9325TP.C(504): error C202: 'X0': undefined identifier
+9325TP.C(505): error C202: 'Y0': undefined identifier
+9325TP.C(510): error C202: 'X0': undefined identifier
+9325TP.C(511): error C202: 'Y0': undefined identifier
+9325TP.C(515): error C208: '_Put_pixel': too many actual parameters
+9325TP.C(538): error C141: syntax error near 'left', expected ')'
+9325TP.C(544): error C202: 'left': undefined identifier
+9325TP.C(545): error C202: 'left': undefined identifier
+9325TP.C(546): error C202: 'right': undefined identifier
+9325TP.C(547): error C202: 'left': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling main.c...
+18b20.h(10): warning C317: attempt to redefine macro 'uint'
+MAIN.C(60): warning C206: 'Ini_ILI9163': missing function-prototype
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SHOW_RGB?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SHOW_COLOUR_BAR?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SHOW_PHOTO?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ILI9325_INITIAL?9325TP
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  INI_ILI9163
+    MODULE:  main.obj (MAIN)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  INI_ILI9163
+    MODULE:  main.obj (MAIN)
+    ADDRESS: 1534H
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17E3H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17E8H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17F5H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17FAH
+Program Size: data=111.1 xdata=16 code=7849
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 13 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+18b20.h(10): warning C317: attempt to redefine macro 'uint'
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SHOW_RGB?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SHOW_COLOUR_BAR?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SHOW_PHOTO?9325TP
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17E3H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17E8H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17F5H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17FAH
+Program Size: data=111.1 xdata=16 code=7849
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 9 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+18b20.h(10): warning C317: attempt to redefine macro 'uint'
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SHOW_RGB?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SHOW_COLOUR_BAR?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SHOW_PHOTO?9325TP
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17E3H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17E8H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17F5H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 17FAH
+Program Size: data=111.1 xdata=16 code=7849
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 9 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+18b20.h(10): warning C317: attempt to redefine macro 'uint'
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+9325TP.C(182): error C202: 'pic': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling main.c...
+18b20.h(10): warning C317: attempt to redefine macro 'uint'
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SHOW_RGB?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SHOW_PHOTO?9325TP
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 1619H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 161EH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 162BH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 1630H
+Program Size: data=107.1 xdata=16 code=7391
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 8 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+18b20.c(8): warning C317: attempt to redefine macro 'uint'
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SHOW_RGB?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SHOW_PHOTO?9325TP
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 1619H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 161EH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 162BH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 1630H
+Program Size: data=107.1 xdata=16 code=7391
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 8 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SHOW_RGB?9325TP
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SHOW_PHOTO?9325TP
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 1619H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 161EH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 162BH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  PIC
+    MODULE:  9325TP.obj (9325TP)
+    ADDRESS: 1630H
+Program Size: data=107.1 xdata=16 code=7391
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+Program Size: data=86.1 xdata=16 code=7067
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+Program Size: data=86.1 xdata=16 code=7042
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(60): warning C206: 'ds1302_init': missing function-prototype
+MAIN.C(81): warning C206: 'ds1302_read_time': missing function-prototype
+MAIN.C(98): warning C206: 'ds1302_write_time': missing function-prototype
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+Program Size: data=86.1 xdata=16 code=7042
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+Program Size: data=86.1 xdata=16 code=7042
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+Program Size: data=86.1 xdata=16 code=7042
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+Program Size: data=86.1 xdata=16 code=7042
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+Program Size: data=102.1 xdata=0 code=7020
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+9325TP.C(346): warning C209: '_Write_Cmd_Data': too few actual parameters
+linking...
+Program Size: data=102.1 xdata=0 code=7025
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+compiling 18b20.c...
+compiling DS1302.c...
+compiling 9325TP.C...
+linking...
+Program Size: data=102.1 xdata=0 code=7034
+creating hex file from "timerlcd"...
+"timerlcd" - 0 Error(s), 0 Warning(s).
